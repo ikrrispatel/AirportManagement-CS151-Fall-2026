@@ -74,6 +74,82 @@ public class Airport {
         return disruptionMessage;
     }
 
+    /**
+     * Records a completed arrival when the airport is operational.
+     */
+    public void recordArrival() {
+        ensureOperational();
+        dailyArrivals++;
+    }
+
+    /**
+     * Records a completed departure when the airport is operational.
+     */
+    public void recordDeparture() {
+        ensureOperational();
+        dailyDepartures++;
+    }
+
+    /**
+     * Closes the airport because of an active operational disruption.
+     *
+     * @param reason explanation shown to airport staff
+     */
+    public void reportDisruption(String reason) {
+        disruptionMessage = requireText(reason, "Disruption reason");
+        operational = false;
+    }
+
+    /**
+     * Resolves the active disruption and reopens the airport.
+     */
+    public void resolveDisruption() {
+        if (operational) {
+            throw new IllegalStateException(
+                    "The airport has no active disruption.");
+        }
+
+        disruptionMessage = "";
+        operational = true;
+    }
+
+    /**
+     * Clears traffic totals at the beginning of a new operating day.
+     */
+    public void resetDailyTraffic() {
+        dailyArrivals = 0;
+        dailyDepartures = 0;
+    }
+
+    /**
+     * Returns the total number of recorded flight movements today.
+     *
+     * @return arrivals plus departures
+     */
+    public int calculateDailyTraffic() {
+        return dailyArrivals + dailyDepartures;
+    }
+
+    /**
+     * Updates the airport's descriptive location information.
+     *
+     * @param city new city
+     * @param country new country
+     */
+    public void relocate(String city, String country) {
+        this.city = requireText(city, "City");
+        this.country = requireText(country, "Country");
+    }
+
+    private void ensureOperational() {
+        if (!operational) {
+            throw new IllegalStateException(
+                    "Airport operations are suspended: "
+                            + disruptionMessage);
+        }
+    }
+
+
     private static String normalizeAirportCode(String airportCode) {
         String normalizedCode =
                 requireText(airportCode, "Airport code")
