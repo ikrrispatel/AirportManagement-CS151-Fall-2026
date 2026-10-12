@@ -4,6 +4,7 @@ public class Gate {
     private boolean international;
     private boolean available;
     private boolean temporarilyClosed;
+    private Flight assignedFlight;
 
     public Gate(String gateID, int capacity, boolean international, boolean available, boolean temporarilyClosed) {
         this.gateID = gateID;
@@ -31,6 +32,27 @@ public class Gate {
 
     public boolean isTemporaryClosed() {
         return temporarilyClosed;
+    }
+
+    public boolean canAcceptFlight(Flight flight) {
+        if (flight == null) {
+            return false;
+        }
+
+        if (!available || temporarilyClosed) {
+            return false;
+        }
+
+        if (flight.isInternational() && !international) {
+            return false;
+        }
+        return true;
+    }
+
+    public void assignedFlight(Flight flight) {
+        assignedFlight = flight;
+        available = false;
+
     }
 
 }
