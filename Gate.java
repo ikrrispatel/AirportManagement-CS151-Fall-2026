@@ -1,12 +1,11 @@
-public class Gate{
+public class Gate {
     private String gateID;
     private int capacity;
     private boolean international;
     private boolean available;
     private boolean temporarilyClosed;
-    
-    public Gate(String gateID, int capacity, boolean international, boolean available, boolean temporarilyClosed)
-    {
+
+    public Gate(String gateID, int capacity, boolean international, boolean available, boolean temporarilyClosed) {
         this.gateID = gateID;
         this.capacity = capacity;
         this.international = international;
@@ -14,31 +13,24 @@ public class Gate{
         this.temporarilyClosed = temporarilyClosed;
     }
 
-    public String getGateID() 
-    {
+    public String getGateID() {
         return gateID;
     }
 
-    public int getCapacity()
-    {
+    public int getCapacity() {
         return capacity;
     }
 
-    public boolean isInternational()
-    {
+    public boolean isInternational() {
         return international;
     }
 
-    public boolean isAvailable()
-    {
+    public boolean isAvailable() {
         return available;
     }
 
-    public boolean isTemporaryClosed()
-    {
+    public boolean isTemporaryClosed() {
         return temporarilyClosed;
     }
-
-
 
 }
