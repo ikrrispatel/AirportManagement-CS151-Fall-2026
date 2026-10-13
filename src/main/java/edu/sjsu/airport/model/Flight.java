@@ -70,4 +70,40 @@ public abstract class Flight {
         this.assignedGate = null;
         this.delayMinutes = 0;
     }
+
+    public String getFlightNumber() {
+        return flightNumber;
+    }
+
+    public String getOrigin() {
+        return origin;
+    }
+
+    public String getDestination() {
+        return destination;
+    }
+
+    public LocalDateTime getDepartureTime() {
+        return departureTime;
+    }
+
+    public LocalDateTime getArrivalTime() {
+        return arrivalTime;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public FlightStatus getStatus() {
+        return status;
+    }
+
+    public Gate getAssignedGate() {
+        return assignedGate;
+    }
+
+    public int getDelayMinutes() {
+        return delayMinutes;
+    }
 }
