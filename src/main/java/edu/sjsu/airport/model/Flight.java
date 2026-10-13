@@ -28,6 +28,34 @@ public abstract class Flight {
             LocalDateTime arrivalTime,
             int capacity) {
 
+        if (flightNumber == null || flightNumber.isBlank()) {
+            throw new IllegalArgumentException("Flight number cannot be blank.");
+        }
+
+        if (origin == null || origin.isBlank()) {
+            throw new IllegalArgumentException("Origin cannot be blank.");
+        }
+
+        if (destination == null || destination.isBlank()) {
+            throw new IllegalArgumentException("Destination cannot be blank.");
+        }
+
+        if (origin.equalsIgnoreCase(destination)) {
+            throw new IllegalArgumentException("Origin and destination cannot be the same.");
+        }
+
+        if (departureTime == null || arrivalTime == null) {
+            throw new IllegalArgumentException("Flight times cannot be null.");
+        }
+
+        if (!departureTime.isBefore(arrivalTime)) {
+            throw new IllegalArgumentException("Departure must be before arrival.");
+        }
+
+        if (capacity <= 0) {
+            throw new IllegalArgumentException("Capacity must be greater than zero.");
+        }
+
         this.flightNumber = flightNumber;
         this.origin = origin;
         this.destination = destination;
