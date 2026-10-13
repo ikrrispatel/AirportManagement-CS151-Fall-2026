@@ -8,7 +8,7 @@ public class Passenger
  * Passenger Identity is determined by the unique passenger Id;
  */
 
-    private String passengerId;
+    private final String passengerId;
     private String fullName;
     private String governmentId;
     private String passportNumber;
@@ -75,5 +75,16 @@ public class Passenger
     @Override 
     public int hashCode() {
         return Objects.hash(passengerId);
+    }
+
+    @Override
+    public String toString() {
+        return "Passenger{"
+                + "passengerId='" + passengerId + '\''
+                + ", fullName='" + fullName + '\''
+                + ", governmentId='" + governmentId + '\''
+                + ", passportNumber='" + passportNumber + '\''
+                + ", visaApproved=" + visaApproved
+                + '}';
     }
 }
