@@ -1,5 +1,7 @@
-package main.java.edu.sjsu.airport.model;
+package edu.sjsu.airport.model;
 import java.util.Objects;
+
+import main.java.edu.sjsu.airport.enums.BookingStatus;
 
 public class Booking {
 /**
@@ -30,7 +32,32 @@ public class Booking {
             double baseFare,
             double totalFare,
             BookingStatus status) {
-        
+            if (confirmationNumber == null
+            || confirmationNumber.isBlank()) {
+        throw new IllegalArgumentException(
+                "Confirmation number cannot be blank.");
+    }
+
+        if (passenger == null) {
+            throw new IllegalArgumentException(
+                    "Passenger cannot be null.");
+        }
+
+        if (flight == null) {
+            throw new IllegalArgumentException(
+                    "Flight cannot be null.");
+        }
+
+        if (seatNumber == null || seatNumber.isBlank()) {
+            throw new IllegalArgumentException(
+                    "Seat number cannot be blank.");
+        }
+
+        if (baseFare < 0) {
+            throw new IllegalArgumentException(
+                    "Base fare cannot be negative.");
+        }
+
         this.confirmationNumber = confirmationNumber;
         this.passenger = passenger;
         this.flight = flight;
@@ -68,7 +95,39 @@ public class Booking {
         return status;
     }
 
-     @Override 
+    public void cancelBooking() {
+        if (status == BookingStatus.CANCELED) {
+            throw new IllegalStateException(
+                "Booking is already canceled.");
+        }
+
+        if (status == BookingStatus.BOARDED) {
+            throw new IllegalStateException(
+                "A boarded booking cannot be canceled.");
+        }
+
+        status = BookingStatus.CANCELED;
+    }
+
+    public void markCheckedIn() {
+        if (status != BookingStatus.CONFIRMED) {
+            throw new IllegalStateException(
+                "Only confirmed bookings can be checked in.");
+        }
+
+        status = BookingStatus.CHECKED_IN;
+    }
+
+    public void markBoarded() {
+        if (status != BookingStatus.CHECKED_IN) {
+            throw new IllegalStateException(
+                    "Passenger must check in before boarding.");
+        }
+
+        status = BookingStatus.BOARDED;
+    }
+    
+    @Override 
     public boolean equals(Object other) {
         if (this == other)
         {
@@ -90,7 +149,7 @@ public class Booking {
 
     @Override
     public String toString() {
-        return "Passenger{"
+        return "Booking{"
                 + "confirmationNumber='" + confirmationNumber + '\''
                 + ", passenger='" + passenger.getPassengerId() + '\''
                 + ", flight='" + flight + '\''

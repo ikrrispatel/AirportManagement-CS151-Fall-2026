@@ -1,4 +1,6 @@
-package main.java.edu.sjsu.airport.model;
+package edu.sjsu.airport.model;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Passenger
@@ -13,6 +15,7 @@ public class Passenger
     private String governmentId;
     private String passportNumber;
     private boolean visaApproved;
+    private final List<Booking> bookings;
     
     /**
      * 
@@ -29,12 +32,27 @@ public class Passenger
             String passportNumber,
             boolean visaApproved) {
 
+        if (passengerId == null || passengerId.isBlank()) {
+            throw new IllegalArgumentException(
+                    "Passenger ID cannot be blank.");
+        }
+
+        if (fullName == null || fullName.isBlank()) {
+            throw new IllegalArgumentException(
+                    "Full name cannot be blank.");
+        }
+
+        if (governmentId == null || governmentId.isBlank()) {
+            throw new IllegalArgumentException(
+                    "Government ID cannot be blank.");
+        }
+
         this.passengerId = passengerId;
         this.fullName = fullName;
         this.governmentId = governmentId;
         this.passportNumber = passportNumber;
         this.visaApproved = visaApproved;
-       
+        this.bookings = new ArrayList<>();
     }
 
     public String getPassengerId() {
@@ -56,6 +74,53 @@ public class Passenger
 
     public boolean isVisaApproved() {
         return visaApproved;
+    }
+
+    public void addBooking(Booking booking) {
+        if (booking == null) {
+            throw new IllegalArgumentException(
+                "Booking cannot be null.");
+        }
+
+        if (!this.equals(booking.getPassenger())) {
+            throw new IllegalArgumentException(
+                "Booking belongs to a different passenger.");
+        }
+
+        if (bookings.contains(booking)) {
+        throw new IllegalArgumentException(
+                "Passenger already has this booking.");
+        }
+
+        bookings.add(booking);
+    }
+
+    public void cancelBooking(Booking booking) {
+        if (booking == null) {
+            throw new IllegalArgumentException(
+                "Booking cannot be null.");
+        }
+
+        if (!bookings.contains(booking)) {
+            throw new IllegalArgumentException(
+                "Booking does not belong to this passenger.");
+        }
+
+        booking.cancelBooking();
+    }
+
+    public void checkIn(Booking booking) {
+        if (booking == null) {
+            throw new IllegalArgumentException(
+                "Booking cannot be null.");
+        }
+
+        if (!bookings.contains(booking)) {
+            throw new IllegalArgumentException(
+                "Booking does not belong to this passenger.");
+        }
+
+        booking.markCheckedIn();
     }
 
     @Override 
