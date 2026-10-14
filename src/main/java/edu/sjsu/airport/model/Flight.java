@@ -1,6 +1,6 @@
-package main.java.edu.sjsu.airport.model;
+package edu.sjsu.airport.model;
 
-import main.java.edu.sjsu.airport.enums.FlightStatus;
+import edu.sjsu.airport.enums.FlightStatus;
 
 import java.time.LocalDateTime;
 import java.util.*;
