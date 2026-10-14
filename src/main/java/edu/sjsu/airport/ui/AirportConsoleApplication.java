@@ -69,7 +69,7 @@ public final class AirportConsoleApplication {
             int choice = input.readInt(
                     "Select an option: ",
                     0,
-                    7);
+                    10);
 
             running = handleMainChoice(choice);
         }
@@ -86,6 +86,9 @@ public final class AirportConsoleApplication {
             case 5 -> recordTraffic(true);
             case 6 -> recordTraffic(false);
             case 7 -> displaySystemSummary();
+            case 8 -> reportDisruption();
+            case 9 -> resolveDisruption();
+            case 10 -> resetAirportTraffic();
             case 0 -> {
                 return false;
             }
@@ -220,6 +223,81 @@ public final class AirportConsoleApplication {
         }
     }
 
+    private void reportDisruption() {
+        output.println();
+        output.println("Report Airport Disruption");
+
+        String code = input.readRequiredLine(
+                "Three-letter airport code: ");
+        String reason = input.readRequiredLine(
+                "Disruption reason: ");
+
+        try {
+            Airport airport = requireAirport(code);
+            airport.reportDisruption(reason);
+
+            output.printf(
+                    "%s operations suspended: %s%n",
+                    airport.getAirportCode(),
+                    airport.getDisruptionMessage());
+        } catch (RuntimeException exception) {
+            output.println(
+                    "Unable to report disruption: "
+                            + exception.getMessage());
+        }
+    }
+
+    private void resolveDisruption() {
+        output.println();
+        output.println("Resolve Airport Disruption");
+
+        String code = input.readRequiredLine(
+                "Three-letter airport code: ");
+
+        try {
+            Airport airport = requireAirport(code);
+            airport.resolveDisruption();
+
+            output.printf(
+                    "%s operations resumed.%n",
+                    airport.getAirportCode());
+        } catch (RuntimeException exception) {
+            output.println(
+                    "Unable to resolve disruption: "
+                            + exception.getMessage());
+        }
+    }
+
+    private void resetAirportTraffic() {
+        output.println();
+        output.println("Reset Airport Traffic");
+
+        String code = input.readRequiredLine(
+                "Three-letter airport code: ");
+
+        try {
+            Airport airport = requireAirport(code);
+            airport.resetDailyTraffic();
+
+            output.printf(
+                    "%s daily traffic was reset.%n",
+                    airport.getAirportCode());
+        } catch (RuntimeException exception) {
+            output.println(
+                    "Unable to reset traffic: "
+                            + exception.getMessage());
+        }
+    }
+
+    private Airport requireAirport(String code) {
+        return system.findAirport(code)
+                .orElseThrow(() ->
+                        new NoSuchElementException(
+                                "No airport found with code "
+                                        + code.toUpperCase()
+                                        + "."));
+    }
+
     private void displayAirport(Airport airport) {
         output.printf(
                 "%s - %s (%s, %s) | %s | Daily traffic: %d%n",
@@ -250,6 +328,9 @@ public final class AirportConsoleApplication {
         output.println("5. Record an arrival");
         output.println("6. Record a departure");
         output.println("7. View system summary");
+        output.println("8. Report an airport disruption");
+        output.println("9. Resolve an airport disruption");
+        output.println("10. Reset an airport's daily traffic");
         output.println("0. Exit");
     }
 
