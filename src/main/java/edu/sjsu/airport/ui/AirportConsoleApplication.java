@@ -69,7 +69,7 @@ public final class AirportConsoleApplication {
             int choice = input.readInt(
                     "Select an option: ",
                     0,
-                    4);
+                    7);
 
             running = handleMainChoice(choice);
         }
@@ -82,7 +82,10 @@ public final class AirportConsoleApplication {
             case 1 -> registerAirport();
             case 2 -> listAirports();
             case 3 -> findAirport();
-            case 4 -> displaySystemSummary();
+            case 4 -> removeAirport();
+            case 5 -> recordTraffic(true);
+            case 6 -> recordTraffic(false);
+            case 7 -> displaySystemSummary();
             case 0 -> {
                 return false;
             }
@@ -163,6 +166,60 @@ public final class AirportConsoleApplication {
         }
     }
 
+    private void removeAirport() {
+        output.println();
+        output.println("Remove Airport");
+
+        String code = input.readRequiredLine(
+                "Three-letter airport code: ");
+
+        try {
+            Airport removedAirport = system.removeAirport(code);
+
+            output.printf(
+                    "%s was removed successfully.%n",
+                    removedAirport.getAirportCode());
+        } catch (RuntimeException exception) {
+            output.println(
+                    "Unable to remove airport: "
+                            + exception.getMessage());
+        }
+    }
+
+    private void recordTraffic(boolean arrival) {
+        output.println();
+        output.println(
+                arrival ? "Record Arrival" : "Record Departure");
+
+        String code = input.readRequiredLine(
+                "Three-letter airport code: ");
+
+        try {
+            Airport airport = system.findAirport(code)
+                    .orElseThrow(() ->
+                            new NoSuchElementException(
+                                    "No airport found with code "
+                                            + code.toUpperCase()
+                                            + "."));
+
+            if (arrival) {
+                airport.recordArrival();
+            } else {
+                airport.recordDeparture();
+            }
+
+            output.printf(
+                    "%s recorded for %s. Daily traffic: %d%n",
+                    arrival ? "Arrival" : "Departure",
+                    airport.getAirportCode(),
+                    airport.calculateDailyTraffic());
+        } catch (RuntimeException exception) {
+            output.println(
+                    "Unable to record traffic: "
+                            + exception.getMessage());
+        }
+    }
+
     private void displayAirport(Airport airport) {
         output.printf(
                 "%s - %s (%s, %s) | %s | Daily traffic: %d%n",
@@ -189,7 +246,10 @@ public final class AirportConsoleApplication {
         output.println("1. Register an airport");
         output.println("2. List registered airports");
         output.println("3. Find an airport");
-        output.println("4. View system summary");
+        output.println("4. Remove an airport");
+        output.println("5. Record an arrival");
+        output.println("6. Record a departure");
+        output.println("7. View system summary");
         output.println("0. Exit");
     }
 

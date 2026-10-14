@@ -24,7 +24,7 @@ class AirportConsoleApplicationTest {
 
     @Test
     void displaysEmptySystemSummary() {
-        TestSession session = runApplication("4\n0\n");
+        TestSession session = runApplication("7\n0\n");
 
         assertTrue(session.output().contains(
                 "Registered airports: 0/100"));
@@ -108,7 +108,7 @@ class AirportConsoleApplicationTest {
                         + "Invalid Airport\n"
                         + "San Francisco\n"
                         + "United States\n"
-                        + "4\n"
+                        + "7\n"
                         + "0\n");
 
         assertEquals(0, session.system().getAirportCount());
