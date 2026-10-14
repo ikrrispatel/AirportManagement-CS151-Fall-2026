@@ -57,6 +57,15 @@ public class Booking {
                     "Base fare cannot be negative.");
         }
 
+        if (totalFare < 0) {
+            throw new IllegalArgumentException(
+                "Total fare cannot be negative.");
+        }
+        if (status == null) {
+            throw new IllegalArgumentException(
+                "Booking status cannot be null.");
+        }
+        
         this.confirmationNumber = confirmationNumber;
         this.passenger = passenger;
         this.flight = flight;
@@ -155,7 +164,7 @@ public class Booking {
                 + ", seatNumber='" + seatNumber + '\''
                 + ", baseFare='" + baseFare + '\''
                 + ", totalFare='" + totalFare + '\''
-                + ", status=" + status +
+                + ", status=" + status
                 + '}';
     }
 }
