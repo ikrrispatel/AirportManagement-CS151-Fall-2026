@@ -1,7 +1,6 @@
 package edu.sjsu.airport.model;
 import java.util.Objects;
-
-import main.java.edu.sjsu.airport.enums.BookingStatus;
+import edu.sjsu.airport.enums.BookingStatus;
 
 public class Booking {
 /**
@@ -32,11 +31,11 @@ public class Booking {
             double baseFare,
             double totalFare,
             BookingStatus status) {
-            if (confirmationNumber == null
+        if (confirmationNumber == null
             || confirmationNumber.isBlank()) {
-        throw new IllegalArgumentException(
+            throw new IllegalArgumentException(
                 "Confirmation number cannot be blank.");
-    }
+        }
 
         if (passenger == null) {
             throw new IllegalArgumentException(
