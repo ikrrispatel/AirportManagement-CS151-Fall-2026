@@ -149,6 +149,65 @@ public abstract class Flight {
         }
     }
 
+    public void delayFlight(int minutes) {
+        if (minutes <= 0) {
+            throw new IllegalArgumentException("Delay minutes must be greater than zero.");
+        }
+        switch (status) {
+            case DEPARTED -> throw new IllegalStateException("Cannot delay a departed flight.");
+
+            case ARRIVED -> throw new IllegalStateException("Cannot delay an arrived flight.");
+
+            case CANCELED -> throw new IllegalStateException("Cannot delay a canceled flight.");
+
+            default -> {
+                delayMinutes = minutes;
+                status = FlightStatus.DELAYED;
+            }
+        }
+    }
+
+    public void openBoarding() {
+        switch (status) {
+            case SCHEDULED, DELAYED -> status = FlightStatus.BOARDING;
+
+            case CANCELED -> throw new IllegalStateException("Cannot open boarding for a canceled flight.");
+
+            case DEPARTED -> throw new IllegalStateException("Cannot open boarding for a departed flight.");
+
+            case ARRIVED -> throw new IllegalStateException("Cannot re-open boarding for an arrived flight.");
+
+            default -> throw new IllegalStateException("Cannot open boarding when flight status is " + status);
+        }
+    }
+
+    public void closeBoarding() {
+        if (status == FlightStatus.BOARDING) {
+            status = FlightStatus.CLOSED;
+        }
+        else {
+            throw new IllegalStateException("Cannot close boarding when flight status is " + status);
+        }
+    }
+
+    public void markDeparted() {
+        if (status == FlightStatus.CLOSED) {
+            status = FlightStatus.DEPARTED;
+        }
+        else {
+            throw new IllegalStateException("Cannot mark flight as departed when flight status is " + status);
+        }
+    }
+
+    public void markArrived() {
+        if (status == FlightStatus.DEPARTED) {
+            status = FlightStatus.ARRIVED;
+        }
+        else {
+            throw new IllegalStateException("Cannot mark flight as arrived when flight status is " + status);
+        }
+    }
+
     // --- Abstracts methods --- //
     public abstract void validateTravelDocuments(Passenger passenger);
 
