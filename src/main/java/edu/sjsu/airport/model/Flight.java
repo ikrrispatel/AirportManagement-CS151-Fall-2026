@@ -2,6 +2,7 @@ package edu.sjsu.airport.model;
 
 import edu.sjsu.airport.enums.FlightStatus;
 import edu.sjsu.airport.interfaces.Trackable;
+import edu.sjsu.airport.exceptions.FlightFullException;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -87,7 +88,7 @@ public abstract class Flight implements Trackable {
         }
 
         if (!hasAvailableSeat()) {
-            throw new IllegalStateException("Flight is full.");
+            throw new FlightFullException("Flight " + flightNumber + " is full.");
         }
 
         passengers.add(passenger);
