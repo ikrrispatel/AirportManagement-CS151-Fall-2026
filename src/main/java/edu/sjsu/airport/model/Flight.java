@@ -72,6 +72,82 @@ public abstract class Flight {
     }
 
     // --- Businesses methods --- //
+    public boolean hasAvailableSeat() {
+        return passengers.size() < capacity;
+    }
+
+    public void addPassenger(Passenger passenger) {
+        if (passenger == null) {
+            throw new IllegalArgumentException("Passenger cannot be null.");
+        }
+
+        if (passengers.contains(passenger)) {
+            throw new IllegalArgumentException("Passenger is already on this flight.");
+        }
+
+        if (!hasAvailableSeat()) {
+            throw new IllegalStateException("Flight is full.");
+        }
+
+        passengers.add(passenger);
+    }
+
+    public void removePassenger(Passenger passenger) {
+        if (passenger == null) {
+            throw new IllegalArgumentException("Passenger cannot be null.");
+        }
+
+        if (!passengers.contains(passenger)) {
+            throw new IllegalArgumentException("Passenger is not on this flight.");
+        }
+
+        passengers.remove(passenger);
+    }
+
+    public void addToStandby(Passenger passenger) {
+        if (passenger == null) {
+            throw new IllegalArgumentException("Passenger cannot be null.");
+        }
+
+        if (passengers.contains(passenger) || standbyQueue.contains(passenger)) {
+            throw new IllegalArgumentException("Passenger is already on this flight.");
+        }
+
+        standbyQueue.offer(passenger);
+    }
+
+    public Passenger promoteStandbyPassenger() {
+        if (!hasAvailableSeat() || standbyQueue.isEmpty()) {
+            return null;
+        }
+
+        Passenger passenger = standbyQueue.poll();
+        passengers.add(passenger);
+
+        return passenger;
+    }
+
+    public void reserveSeat(String seatNumber) {
+        if (seatNumber == null || seatNumber.isBlank()) {
+            throw new IllegalArgumentException("Seat number cannot be blank.");
+        }
+
+        if (reservedSeats.contains(seatNumber)) {
+            throw new IllegalArgumentException("Seat is already reserved.");
+        }
+
+        reservedSeats.add(seatNumber);
+    }
+
+    public void releaseSeat(String seatNumber) {
+        if (seatNumber == null || seatNumber.isBlank()) {
+            throw new IllegalArgumentException("Seat number cannot be blank.");
+        }
+
+        if (!reservedSeats.remove(seatNumber)) {
+            throw new IllegalArgumentException("Seat is not currently reserved.");
+        }
+    }
 
     // --- Abstracts methods --- //
     public abstract void validateTravelDocuments(Passenger passenger);
