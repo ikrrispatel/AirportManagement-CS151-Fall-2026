@@ -1,5 +1,6 @@
 package edu.sjsu.airport.service;
 
+import edu.sjsu.airport.config.SystemLimits;
 import edu.sjsu.airport.exception.CapacityExceededException;
 import edu.sjsu.airport.exception.DuplicateAirportException;
 import edu.sjsu.airport.model.Airport;
@@ -108,7 +109,7 @@ class AirportManagementSystemTest {
                 new AirportManagementSystem();
 
         for (int index = 0;
-             index < AirportManagementSystem.MAXIMUM_INSTANCES;
+             index < SystemLimits.MAXIMUM_INSTANCES;
              index++) {
             system.addAirport(createAirport(
                     airportCodeFor(index)));
@@ -116,7 +117,7 @@ class AirportManagementSystemTest {
 
         assertFalse(system.hasCapacity());
         assertEquals(
-                AirportManagementSystem.MAXIMUM_INSTANCES,
+                SystemLimits.MAXIMUM_INSTANCES,
                 system.getAirportCount());
 
         assertThrows(

@@ -1,5 +1,6 @@
 package edu.sjsu.airport.ui;
 
+import edu.sjsu.airport.config.SystemLimits;
 import edu.sjsu.airport.exception.ExitRequestedException;
 import edu.sjsu.airport.model.Airport;
 import edu.sjsu.airport.service.AirportManagementSystem;
@@ -340,7 +341,7 @@ public final class AirportConsoleApplication {
         output.printf(
                 "Registered airports: %d/%d%n",
                 system.getAirportCount(),
-                AirportManagementSystem.MAXIMUM_INSTANCES);
+                SystemLimits.MAXIMUM_INSTANCES);
         output.printf(
                 "Daily flight movements: %d%n",
                 system.calculateTotalDailyTraffic());
