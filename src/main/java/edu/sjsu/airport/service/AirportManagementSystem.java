@@ -1,5 +1,6 @@
 package edu.sjsu.airport.service;
 
+import edu.sjsu.airport.config.SystemLimits;
 import edu.sjsu.airport.exception.CapacityExceededException;
 import edu.sjsu.airport.exception.DuplicateAirportException;
 import edu.sjsu.airport.model.Airport;
@@ -15,8 +16,6 @@ import java.util.Optional;
  * Coordinates airports registered with the management system.
  */
 public class AirportManagementSystem {
-    public static final int MAXIMUM_INSTANCES = 100;
-
     private final List<Airport> airports;
 
     public AirportManagementSystem() {
@@ -33,7 +32,7 @@ public class AirportManagementSystem {
 
         if (!hasCapacity()) {
             throw new CapacityExceededException(
-                    "airport", MAXIMUM_INSTANCES);
+                    "airport", SystemLimits.MAXIMUM_INSTANCES);
         }
 
         if (airports.contains(airport)) {
@@ -91,7 +90,7 @@ public class AirportManagementSystem {
     }
 
     public boolean hasCapacity() {
-        return airports.size() < MAXIMUM_INSTANCES;
+        return airports.size() < SystemLimits.MAXIMUM_INSTANCES;
     }
 
     /**
