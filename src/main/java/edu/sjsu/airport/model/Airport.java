@@ -137,8 +137,11 @@ public class Airport {
      * @param country new country
      */
     public void relocate(String city, String country) {
-        this.city = requireText(city, "City");
-        this.country = requireText(country, "Country");
+        String validatedCity = requireText(city, "City");
+        String validatedCountry = requireText(country, "Country");
+
+        this.city = validatedCity;
+        this.country = validatedCountry;
     }
 
     private void ensureOperational() {
