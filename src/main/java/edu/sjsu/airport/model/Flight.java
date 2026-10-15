@@ -1,12 +1,13 @@
 package edu.sjsu.airport.model;
 
 import edu.sjsu.airport.enums.FlightStatus;
+import edu.sjsu.airport.interfaces.Trackable;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
 
-public abstract class Flight {
+public abstract class Flight implements Trackable {
     private String flightNumber;
     private String origin;
     private String destination;
@@ -206,6 +207,44 @@ public abstract class Flight {
         else {
             throw new IllegalStateException("Cannot mark flight as arrived when flight status is " + status);
         }
+    }
+
+    // --- Interface methods --- //
+    public String getCurrentStatus() {
+        return status.toString();
+    }
+
+    public void updateStatus(String newStatus) {
+        if (newStatus == null || newStatus.isBlank()) {
+            throw new IllegalArgumentException("Flight status cannot be blank.");
+        }
+
+        FlightStatus newFlightStatus;
+
+        try {
+            newFlightStatus = FlightStatus.valueOf(newStatus.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid flight status: " + newStatus);
+        }
+
+        switch (newFlightStatus) {
+            case BOARDING -> openBoarding();
+            case CLOSED -> closeBoarding();
+            case DEPARTED -> markDeparted();
+            case ARRIVED -> markArrived();
+
+            default -> throw new IllegalStateException("Flight status cannot be manually changed to " + newFlightStatus);
+        }
+    }
+
+    @Override
+    public String getTrackingSummary() {
+        return "Flight " + flightNumber
+                + ": " + origin + " -> " + destination
+                + ", Status: " + status
+                + ", Departure: " + departureTime
+                + ", Arrival: " + arrivalTime
+                + ", Delay: " + delayMinutes + " minutes";
     }
 
     // --- Abstracts methods --- //
