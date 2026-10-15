@@ -20,6 +20,14 @@ public class DomesticFlight extends Flight {
 
         super(flightNumber, origin, destination, departureTime, arrivalTime, capacity);
 
+        if (operatingState == null || operatingState.isBlank()) {
+            throw new IllegalArgumentException("Operating State cannot be null or blank");
+        }
+
+        if (domesticTaxRate < 0) {
+            throw new IllegalArgumentException("Domestic Tax Rate cannot be negative");
+        }
+
         this.operatingState = operatingState;
         this.domesticTaxRate = domesticTaxRate;
         this.residentDiscountAvailable = residentDiscountAvailable;
