@@ -7,36 +7,32 @@ import edu.sjsu.airport.exception.GateUnavailableException;
 public class Gate {
     private String gateNumber;
     private String terminal;
-    private int maximumPassangerCapacity;
+    private int maximumPassengerCapacity;
     private boolean internationalCapable;
     private boolean available;
     private Flight assignedFlight;
     private LocalDateTime unavailableUntil;
 
-    public Gate(String gateNumer,String terminal, int maximumPassangerCapacity, boolean internationalCapable, boolean available) {
+    public Gate(String gateNumber, String terminal, int maximumPassengerCapacity, boolean internationalCapable,
+            boolean available) {
 
-        if (gateNumer == null || gateNumer.isBlank())
-        {
+        if (gateNumber == null || gateNumber.isBlank()) {
             throw new IllegalArgumentException("Gate Number cannot be blank");
         }
 
-        if(terminal == null || terminal.isBlank())
-        {
-            throw new IllegalArgumentException("Capacity must be greater than 0");
+        if (terminal == null || terminal.isBlank()) {
+            throw new IllegalArgumentException("Terminal cannot be blank");
         }
 
-        if(maximumPassangerCapacity <=0 )
-        {
-            throw new IllegalArgumentException("A closed gate cannot be available");
+        if (maximumPassengerCapacity <= 0) {
+            throw new IllegalArgumentException("Passenger capacity must be greater than 0");
         }
 
-
-
-        this.gateNumber = gateNumer;
+        this.gateNumber = gateNumber;
         this.terminal = terminal;
         this.internationalCapable = internationalCapable;
-        this.available = true;
-        this.maximumPassangerCapacity = maximumPassangerCapacity;
+        this.available = available;
+        this.maximumPassengerCapacity = maximumPassengerCapacity;
     }
 
     public String getGateID() {
@@ -47,43 +43,94 @@ public class Gate {
         return terminal;
     }
 
-    public boolean isinternationalCapable() {
+    public boolean isInternationalCapable() {
         return internationalCapable;
     }
 
     public boolean isAvailable() {
-     if (unavailableUntil != null && !LocalDateTime.now().isBefore(unavailableUntil))
-        {
+        if (unavailableUntil != null && !LocalDateTime.now().isBefore(unavailableUntil)) {
             unavailableUntil = null;
         }
 
-        return available && assignedFlight(null) && unavailableUntil == null;
+        return available && assignedFlight == null && unavailableUntil == null;
     }
 
-    public boolean getAssignedFlight() {
+    public Flight getAssignedFlight() {
         return assignedFlight;
     }
 
     public boolean canAcceptFlight(Flight flight) {
-        if (!isAvailable()) {
+        if (flight == null || !isAvailable()) {
             return false;
         }
 
-        if (flight.isinternationalCapable) {
+        if (flight.isInternationalCapable() && !internationalCapable) {
             return false;
         }
 
         return true;
     }
 
-    public boolean assignedFlight(Flight flight) {
-        if (!canAcceptFlight(flight))
-        {
+    public void assignFlight(Flight flight) {
+        if (flight == null) {
+            throw new IllegalArgumentException("Flight cannot be null.");
+        }
+
+        if (!canAcceptFlight(flight)) {
             throw new GateUnavailableException();
         }
 
         assignedFlight = flight;
         available = false;
+    }
+
+    public void releaseFlight() {
+        if (assignedFlight == null) {
+            throw new IllegalStateException("No Flight currently assigned to this gate");
+        }
+
+        assignedFlight = null;
+        available = true;
+    }
+
+    public void markTemporarilyUnavailable(LocalDateTime until) {
+        if (until == null || !until.isAfter(LocalDateTime.now())) {
+            throw new IllegalArgumentException("Unavailable time");
+        }
+
+        unavailableUntil = until;
+    }
+
+    public void restoreAvailability() {
+        unavailableUntil = null;
+
+        if (assignedFlight == null) {
+            available = true;
+        } else {
+            available = false;
+        }
+    }
+
+    public int calculateTurnaroundTime() {
+        if (internationalCapable) {
+            return 180;
+        } else {
+            return 30;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Gate{" +
+                "gateNumber='" + gateNumber + '\'' +
+                ", terminal='" + terminal + '\'' +
+                ", maximumPassengerCapacity=" + maximumPassengerCapacity +
+                ", internationalCapable=" + internationalCapable +
+                ", available='" + isAvailable() +
+                ", assignedFlight=" + assignedFlight +
+                ", unavailableUntil=" + unavailableUntil +
+                '}';
+
     }
 
 }

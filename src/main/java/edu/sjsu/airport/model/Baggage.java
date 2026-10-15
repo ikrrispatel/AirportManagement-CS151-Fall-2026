@@ -1,20 +1,40 @@
-package src.main.java.edu.sjsu.airport.model;
+package edu.sjsu.airport.model;
+
 public class Baggage {
     private String tagNumber;
-    private Passanger owner;
+    private Passenger owner;
     private Flight assignedFlight;
     private BaggageStatus status;
     private String currentLocation;
     private double weight;
-    
 
-    public Baggage(String tagNumber, Passanger owner, BaggageStatus status, String currentLocationocation, double weight) {
+    public Baggage(String tagNumber, Passenger owner, BaggageStatus status, String currentLocation, double weight) {
+
+        if (tagNumber == null || tagNumber.isBlank()) {
+            throw new IllegalArgumentException("Tag number cannot be blank");
+        }
+
+        if (owner == null) {
+            throw new IllegalArgumentException("Owner cannot be null");
+        }
+
+        if (status == null) {
+            throw new IllegalArgumentException("Status cannot be null");
+        }
+
+        if (currentLocation == null || currentLocation.isBlank()) {
+            throw new IllegalArgumentException("Current location cannot be blank");
+        }
+
+        if (weight <= 0) {
+            throw new IllegalArgumentException("Weight must be greater than 0");
+        }
+
         this.tagNumber = tagNumber;
         this.owner = owner;
         this.status = status;
-        this.currentLocation = currentLocationocation;
+        this.currentLocation = currentLocation;
         this.weight = weight;
-        this.BaggageStatus = BaggageStatus;
 
     }
 
@@ -22,12 +42,11 @@ public class Baggage {
         return tagNumber;
     }
 
-    public Passanger getOwner() {
+    public Passenger getOwner() {
         return owner;
     }
-    
-    public Flight getAssignedFlight()
-    {
+
+    public Flight getAssignedFlight() {
         return assignedFlight;
     }
 
@@ -43,8 +62,78 @@ public class Baggage {
         return weight;
     }
 
-    public double getMaxWeight() {
-        return maxWeight;
+    public void checkInBaggage(Flight flight) {
+        if (flight == null) {
+            throw new IllegalArgumentException("Flight cannot be null");
+        }
+
+        if (status != BaggageStatus.CREATED) {
+            throw new IllegalStateException("Only newly created baggage can be checked in");
+        }
+
+        assignedFlight = flight;
+        status = BaggageStatus.CHECKED_IN;
+    }
+
+    public void loadOnFlight() {
+        if (status != BaggageStatus.CHECKED_IN) {
+            throw new IllegalStateException("Baggage must be checked in before loaded");
+        }
+
+        status = BaggageStatus.LOADED;
+
+    }
+
+    public void transferToFlight(Flight replacementFlight) {
+        if (replacementFlight == null) {
+            throw new IllegalArgumentException("Replacement flight cannot be null");
+        }
+
+        if (status != BaggageStatus.CHECKED_IN && status != BaggageStatus.LOADED && status != BaggageStatus.MISROUTED) {
+            throw new IllegalStateException("Baggage cannot be transferred in its current state");
+        }
+
+        assignedFlight = replacementFlight;
+        status = BaggageStatus.TRANSFERRED;
+
+    }
+
+    public void markMisrouted(String location) {
+        if (location == null || location.isBlank()) {
+            throw new IllegalArgumentException("Misrouted baggage location cannot be blank");
+        }
+
+        currentLocation = location;
+        status = BaggageStatus.MISROUTED;
+    }
+
+    public void markReadyForClaim() {
+        if (status != BaggageStatus.IN_TRANSIT && status != BaggageStatus.LOADED
+                && status != BaggageStatus.TRANSFERRED) {
+            throw new IllegalStateException("Baggae is not ready to be claimed");
+        }
+
+        status = BaggageStatus.READY_FOR_CLAIM;
+    }
+
+    public void markClaimed() {
+        if (status != BaggageStatus.READY_FOR_CLAIM) {
+            throw new IllegalStateException("Baggage must be ready for claim before collection");
+        }
+
+        status = BaggageStatus.CLAIMED;
+    }
+
+    @Override
+    public String toString() {
+        return "Baggage{" +
+                "tagNumber=" + tagNumber + '\'' +
+                ", owner=" + owner +
+                ", assignedFlight" + assignedFlight +
+                ", status=" + status +
+                ", currentLocation='" + currentLocation + '\'' +
+                ", weight=" + weight +
+                '}';
     }
 
 }
