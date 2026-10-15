@@ -71,6 +71,12 @@ public abstract class Flight {
         this.delayMinutes = 0;
     }
 
+    public abstract void validateTravelDocuments(Passenger passenger);
+
+    public abstract double calculateTravelFee(Passenger passenger);
+
+    public abstract int getRequiredArrivalMinutes();
+
     public String getFlightNumber() {
         return flightNumber;
     }
