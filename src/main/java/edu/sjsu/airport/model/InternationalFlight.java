@@ -22,6 +22,14 @@ public class InternationalFlight extends Flight {
 
         super(flightNumber, origin, destination, departureTime, arrivalTime, capacity);
 
+        if (destinationCountry == null || destinationCountry.isBlank()) {
+            throw new IllegalArgumentException("Destination Country cannot be null or blank");
+        }
+
+        if (internationalTaxRate < 0) {
+            throw new IllegalArgumentException("International Tax Rate cannot be negative");
+        }
+
         this.destinationCountry = destinationCountry;
         this.internationalTaxRate = internationalTaxRate;
         this.customsRequirements = new ArrayList<>();
