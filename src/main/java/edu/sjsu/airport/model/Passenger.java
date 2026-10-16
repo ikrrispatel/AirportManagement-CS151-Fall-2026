@@ -113,11 +113,10 @@ public class Passenger
 
         flight.validateTravelDocuments(this);
     }
+
     public void addBooking(Booking booking) {
-        if (booking == null) {
-            throw new IllegalArgumentException(
-                "Booking cannot be null.");
-        }
+        Objects.requireNonNull(booking, "Booking cannot be null");
+
 
         if (!this.equals(booking.getPassenger())) {
             throw new IllegalArgumentException(
@@ -125,7 +124,7 @@ public class Passenger
         }
 
         if (bookings.contains(booking)) {
-        throw new IllegalArgumentException(
+            throw new IllegalArgumentException(
                 "Passenger already has this booking.");
         }
 
@@ -133,10 +132,7 @@ public class Passenger
     }
 
     public void cancelBooking(Booking booking) {
-        if (booking == null) {
-            throw new IllegalArgumentException(
-                "Booking cannot be null.");
-        }
+        Objects.requireNonNull(booking, "Booking cannot be null");
 
         if (!bookings.contains(booking)) {
             throw new IllegalArgumentException(
@@ -147,10 +143,7 @@ public class Passenger
     }
 
     public void checkIn(Booking booking) {
-        if (booking == null) {
-            throw new IllegalArgumentException(
-                "Booking cannot be null.");
-        }
+        Objects.requireNonNull(booking, "Booking cannot be null");
 
         if (!bookings.contains(booking)) {
             throw new IllegalArgumentException(
@@ -158,6 +151,37 @@ public class Passenger
         }
 
         booking.markCheckedIn();
+    }
+
+    public void addBaggage(Baggage baggage) {
+        Objects.requireNonNull(baggage, "Baggage cannot be null");
+
+        if(!this.equals(baggage.getOwner())) {
+            throw new IllegalArgumentException(
+                "Baggage belongs to a different passenger.");        
+        }
+
+        if (baggageItems.contains(baggage)) {
+            throw new IllegalArgumentException(
+                "Baggage is already assigned to this paasenger");
+        }
+
+        baggageItems.add(baggage);
+    }
+
+    public void removeBaggage(Baggage baggage) {
+        Objects.requireNonNull(baggage, "Baggage cannot be null");
+        
+        if(!baggageItems.remove(baggage)) {
+            throw new IllegalArgumentException(
+                "Baggage does not belong to this passenger");
+        }
+    }
+
+    public String viewIternary() {
+        if (bookings.isEmpty()) {
+            return "No booking found for pasenger";
+        }
     }
 
     @Override 
