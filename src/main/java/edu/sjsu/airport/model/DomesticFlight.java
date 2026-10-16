@@ -87,8 +87,7 @@ public class DomesticFlight extends Flight {
 
     public int determineBoardingGroup(int seatRow) {
         if (seatRow <= 0) {
-            throw new IllegalArgumentException(
-                    "Seat row must be greater than zero.");
+            throw new IllegalArgumentException("Seat row must be greater than zero.");
         }
 
         if (seatRow >= 21) {
