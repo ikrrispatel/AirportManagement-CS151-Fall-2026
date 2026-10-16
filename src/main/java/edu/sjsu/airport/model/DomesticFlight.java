@@ -39,7 +39,7 @@ public class DomesticFlight extends Flight {
 
     @Override
     public void validateTravelDocuments(Passenger passenger) {
-        // TODO: implement domestic travel document validation
+        validateGovernmentId(passenger);
     }
 
     @Override
