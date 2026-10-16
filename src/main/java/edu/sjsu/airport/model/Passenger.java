@@ -16,6 +16,7 @@ public class Passenger
     private String passportNumber;
     private boolean visaApproved;
     private final List<Booking> bookings;
+    private final List<Baggage> baggageItems;
     
     /**
      * 
@@ -53,6 +54,7 @@ public class Passenger
         this.passportNumber = passportNumber;
         this.visaApproved = visaApproved;
         this.bookings = new ArrayList<>();
+        this.baggageItems = new ArrayList<>();
     }
 
     public String getPassengerId() {
@@ -76,6 +78,41 @@ public class Passenger
         return visaApproved;
     }
 
+    public List<Booking> getBookings() {
+        return List.copyOf(bookings);
+    }
+
+    public List<Baggage> getBaggages() {
+        return List.copyOf(baggageItems)
+    }
+
+    private static String requireText(String value, String fieldName) {
+        if (value == null || value.isBlank()) {
+            throw new IllegalArgumentException(
+                    fieldName + "cannot be blank");
+        }
+
+        return value.trim();
+    }
+
+    private static String normalizeOptionalText(String value) {
+        if (value == null || value.isBlank()) {
+            return "";
+        }
+        
+        return value.trim();
+    }
+
+    public void requestBooking(Flight flight) {
+        Objects.requireNonNull(flight, "Flight cannot be null");
+
+        if (hasBookingForFlight (flight)) {
+            throw new IllegalStateException(
+                "Passenger already has a booking for this flight");
+        }
+
+        flight.validateTravelDocuments(this);
+    }
     public void addBooking(Booking booking) {
         if (booking == null) {
             throw new IllegalArgumentException(
