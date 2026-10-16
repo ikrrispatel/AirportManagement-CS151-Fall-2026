@@ -1,5 +1,7 @@
 package edu.sjsu.airport.model;
 
+import edu.sjsu.airport.exceptions.*;
+
 import java.time.*;
 import java.util.*;
 
@@ -51,5 +53,50 @@ public class InternationalFlight extends Flight {
     public int getRequiredArrivalMinutes() {
         // TODO: implement international arrival requirement
         return 0;
+    }
+
+    // --- Business methods --- //
+    public void validatePassport(Passenger passenger) {
+        if (passenger == null) {
+            throw new IllegalArgumentException("Passenger cannot be null.");
+        }
+
+        if (passenger.getPassportNumber() == null || passenger.getPassportNumber().isBlank()) {
+            throw new InvalidTravelDocumentException("Passenger must have a valid passport.");
+        }
+    }
+
+    public void validateVisaRequirement(Passenger passenger) {
+        if (passenger == null) {
+            throw new IllegalArgumentException("Passenger cannot be null.");
+        }
+
+        if (visaRequired && !passenger.isVisaApproved()) {
+            throw new InvalidTravelDocumentException("Passenger must have an approved visa.");
+        }
+    }
+
+    public double calculateInternationalTax(double baseFare) {
+        if (baseFare < 0) {
+            throw new IllegalArgumentException("Base fare cannot be negative.");
+        }
+
+        return baseFare * internationalTaxRate;
+    }
+
+    public void addCustomsRequirement(String requirement) {
+        if (requirement == null || requirement.isBlank()) {
+            throw new IllegalArgumentException("Custom requirement cannot be null or blank");
+        }
+
+        if (customsRequirements.contains(requirement)) {
+            throw new IllegalArgumentException("Custom requirement already exists.");
+        }
+
+        this.customsRequirements.add(requirement);
+    }
+
+    public LocalDateTime determineInternationalCheckInDeadline() {
+        return getDepartureTime().minusMinutes(getRequiredArrivalMinutes());
     }
 }
