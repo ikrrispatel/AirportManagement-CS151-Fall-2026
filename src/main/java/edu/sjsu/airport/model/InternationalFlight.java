@@ -40,7 +40,8 @@ public class InternationalFlight extends Flight {
 
     @Override
     public void validateTravelDocuments(Passenger passenger) {
-        // TODO: implement international travel document validation
+        validatePassport(passenger);
+        validateVisaRequirement(passenger);
     }
 
     @Override
