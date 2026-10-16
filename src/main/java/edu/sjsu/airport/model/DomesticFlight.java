@@ -5,6 +5,8 @@ import edu.sjsu.airport.exceptions.InvalidTravelDocumentException;
 import java.time.LocalDateTime;
 
 public class DomesticFlight extends Flight {
+    private static final double RESIDENT_DISCOUNT_RATE = 0.10;
+
     private String operatingState;
     private double domesticTaxRate;
     private boolean residentDiscountAvailable;
@@ -71,17 +73,16 @@ public class DomesticFlight extends Flight {
         return baseFare * domesticTaxRate;
     }
 
-    public double applyResidentDiscount(double fare) {
-        if (fare < 0) {
-            throw new IllegalArgumentException("Fare cannot be negative.");
+    public double applyResidentDiscount(double baseFare) {
+        if (!Double.isFinite(baseFare) || baseFare < 0) {
+            throw new IllegalArgumentException("Base fare must be a finite, non-negative value.");
         }
 
-        if (!residentDiscountAvailable) {
-            return fare;
+        if (residentDiscountAvailable) {
+            return baseFare * (1.0 - RESIDENT_DISCOUNT_RATE);
         }
 
-        // TODO: Apply group-approved resident discount.
-        return fare;
+        return baseFare;
     }
 
     public int determineBoardingGroup(int seatRow) {
