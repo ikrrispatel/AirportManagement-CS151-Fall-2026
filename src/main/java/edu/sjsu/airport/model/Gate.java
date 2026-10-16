@@ -35,12 +35,24 @@ public class Gate {
         this.maximumPassengerCapacity = maximumPassengerCapacity;
     }
 
-    public String getGateID() {
+    public String getGateNumber() {
         return gateNumber;
     }
 
     public String getTerminal() {
         return terminal;
+    }
+
+    public int getMaximumPassengerCapacity() {
+        return maximumPassengerCapacity;
+    }
+
+    public LocalDateTime getUnavailableUntil() {
+        return unavailableUntil;
+    }
+
+    public Flight getAssignedFlight() {
+        return assignedFlight;
     }
 
     public boolean isInternationalCapable() {
@@ -50,13 +62,13 @@ public class Gate {
     public boolean isAvailable() {
         if (unavailableUntil != null && !LocalDateTime.now().isBefore(unavailableUntil)) {
             unavailableUntil = null;
+
+            if (assignedFlight == null) {
+                available = true;
+            }
         }
 
         return available && assignedFlight == null && unavailableUntil == null;
-    }
-
-    public Flight getAssignedFlight() {
-        return assignedFlight;
     }
 
     public boolean canAcceptFlight(Flight flight) {
@@ -94,6 +106,10 @@ public class Gate {
     }
 
     public void markTemporarilyUnavailable(LocalDateTime until) {
+        if (assignedFlight != null) {
+            throw new IllegalStateException("Cannot mark gate unavailable while flight is assigned");
+        }
+
         if (until == null || !until.isAfter(LocalDateTime.now())) {
             throw new IllegalArgumentException("Unavailable time");
         }
@@ -111,14 +127,6 @@ public class Gate {
         }
     }
 
-    public int calculateTurnaroundTime() {
-        if (internationalCapable) {
-            return 180;
-        } else {
-            return 30;
-        }
-    }
-
     @Override
     public String toString() {
         return "Gate{" +
@@ -126,7 +134,7 @@ public class Gate {
                 ", terminal='" + terminal + '\'' +
                 ", maximumPassengerCapacity=" + maximumPassengerCapacity +
                 ", internationalCapable=" + internationalCapable +
-                ", available='" + isAvailable() +
+                ", available=" + isAvailable() +
                 ", assignedFlight=" + assignedFlight +
                 ", unavailableUntil=" + unavailableUntil +
                 '}';

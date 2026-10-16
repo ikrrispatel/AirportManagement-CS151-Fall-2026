@@ -1,12 +1,12 @@
 package edu.sjsu.airport.model;
 
 public class Baggage {
-    private String tagNumber;
-    private Passenger owner;
+    private final String tagNumber;
+    private final Passenger owner;
     private Flight assignedFlight;
     private BaggageStatus status;
     private String currentLocation;
-    private double weight;
+    private final double weight;
 
     public Baggage(String tagNumber, Passenger owner, BaggageStatus status, String currentLocation, double weight) {
 
@@ -26,7 +26,7 @@ public class Baggage {
             throw new IllegalArgumentException("Current location cannot be blank");
         }
 
-        if (weight <= 0) {
+        if (!Double.isFinite(weight) || weight <= 0) {
             throw new IllegalArgumentException("Weight must be greater than 0");
         }
 
@@ -110,7 +110,7 @@ public class Baggage {
     public void markReadyForClaim() {
         if (status != BaggageStatus.IN_TRANSIT && status != BaggageStatus.LOADED
                 && status != BaggageStatus.TRANSFERRED) {
-            throw new IllegalStateException("Baggae is not ready to be claimed");
+            throw new IllegalStateException("Baggage is not ready to be claimed");
         }
 
         status = BaggageStatus.READY_FOR_CLAIM;
@@ -122,14 +122,15 @@ public class Baggage {
         }
 
         status = BaggageStatus.CLAIMED;
+        assignedFlight = null;
     }
 
     @Override
     public String toString() {
         return "Baggage{" +
-                "tagNumber=" + tagNumber + '\'' +
+                "tagNumber='" + tagNumber + '\'' +
                 ", owner=" + owner +
-                ", assignedFlight" + assignedFlight +
+                ", assignedFlight=" + assignedFlight +
                 ", status=" + status +
                 ", currentLocation='" + currentLocation + '\'' +
                 ", weight=" + weight +

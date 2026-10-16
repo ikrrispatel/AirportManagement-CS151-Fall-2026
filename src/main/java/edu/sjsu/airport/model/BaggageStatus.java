@@ -8,6 +8,6 @@ public enum BaggageStatus {
     TRANSFERRED,
     MISROUTED,
     READY_FOR_CLAIM,
-    CLAIMED,
+    CLAIMED
 
 }
