@@ -358,6 +358,26 @@ public final class AirportConsoleApplication {
                 system.getAirportCount(),
                 SystemLimits.MAXIMUM_INSTANCES);
         output.printf(
+                "Registered flights: %d/%d%n",
+                system.getFlightCount(),
+                SystemLimits.MAXIMUM_INSTANCES);
+        output.printf(
+                "Registered passengers: %d/%d%n",
+                system.getPassengerCount(),
+                SystemLimits.MAXIMUM_INSTANCES);
+        output.printf(
+                "Registered bookings: %d/%d%n",
+                system.getBookingCount(),
+                SystemLimits.MAXIMUM_INSTANCES);
+        output.printf(
+                "Registered gates: %d/%d%n",
+                system.getGateCount(),
+                SystemLimits.MAXIMUM_INSTANCES);
+        output.printf(
+                "Registered baggage: %d/%d%n",
+                system.getBaggageCount(),
+                SystemLimits.MAXIMUM_INSTANCES);
+        output.printf(
                 "Daily flight movements: %d%n",
                 system.calculateTotalDailyTraffic());
         output.printf(
