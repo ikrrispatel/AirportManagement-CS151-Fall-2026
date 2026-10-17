@@ -255,6 +255,8 @@ public abstract class Flight implements Trackable {
 
     public abstract int getRequiredArrivalMinutes();
 
+    public abstract boolean isInternational();
+
     // --- Getters & Setters --- //
     public String getFlightNumber() {
         return flightNumber;

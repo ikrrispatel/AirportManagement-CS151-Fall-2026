@@ -39,6 +39,11 @@ public class InternationalFlight extends Flight {
         this.customsRequirements = new ArrayList<>();
         this.visaRequired = visaRequired;
     }
+    @Override
+    public boolean isInternational() {
+        return true;
+    }
+
 
     @Override
     public void validateTravelDocuments(Passenger passenger) {

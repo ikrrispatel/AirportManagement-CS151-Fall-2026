@@ -76,7 +76,7 @@ public class Gate {
             return false;
         }
 
-        if (flight.isInternationalCapable() && !internationalCapable) {
+        if (flight.isInternational() && !internationalCapable) {
             return false;
         }
 

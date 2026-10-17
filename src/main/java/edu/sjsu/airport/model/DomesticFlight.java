@@ -37,6 +37,11 @@ public class DomesticFlight extends Flight {
         this.domesticTaxRate = domesticTaxRate;
         this.residentDiscountAvailable = residentDiscountAvailable;
     }
+    @Override
+    public boolean isInternational() {
+        return false;
+    }
+
 
     @Override
     public void validateTravelDocuments(Passenger passenger) {
