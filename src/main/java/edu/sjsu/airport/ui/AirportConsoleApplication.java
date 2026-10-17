@@ -70,7 +70,7 @@ public final class AirportConsoleApplication {
             int choice = input.readInt(
                     "Select an option: ",
                     0,
-                    10);
+                    13);
 
             running = handleMainChoice(choice);
         }
@@ -90,6 +90,18 @@ public final class AirportConsoleApplication {
             case 8 -> reportDisruption();
             case 9 -> resolveDisruption();
             case 10 -> resetAirportTraffic();
+            case 11 -> new FlightPassengerConsole(
+                    system,
+                    input,
+                    output).run();
+            case 12 -> new BookingConsole(
+                    system,
+                    input,
+                    output).run();
+            case 13 -> new GateBaggageConsole(
+                    system,
+                    input,
+                    output).run();
             case 0 -> {
                 return false;
             }
@@ -332,6 +344,9 @@ public final class AirportConsoleApplication {
         output.println("8. Report an airport disruption");
         output.println("9. Resolve an airport disruption");
         output.println("10. Reset an airport's daily traffic");
+        output.println("11. Manage flights and passengers");
+        output.println("12. Manage bookings");
+        output.println("13. Manage gates and baggage");
         output.println("0. Exit");
     }
 
@@ -341,6 +356,26 @@ public final class AirportConsoleApplication {
         output.printf(
                 "Registered airports: %d/%d%n",
                 system.getAirportCount(),
+                SystemLimits.MAXIMUM_INSTANCES);
+        output.printf(
+                "Registered flights: %d/%d%n",
+                system.getFlightCount(),
+                SystemLimits.MAXIMUM_INSTANCES);
+        output.printf(
+                "Registered passengers: %d/%d%n",
+                system.getPassengerCount(),
+                SystemLimits.MAXIMUM_INSTANCES);
+        output.printf(
+                "Registered bookings: %d/%d%n",
+                system.getBookingCount(),
+                SystemLimits.MAXIMUM_INSTANCES);
+        output.printf(
+                "Registered gates: %d/%d%n",
+                system.getGateCount(),
+                SystemLimits.MAXIMUM_INSTANCES);
+        output.printf(
+                "Registered baggage: %d/%d%n",
+                system.getBaggageCount(),
                 SystemLimits.MAXIMUM_INSTANCES);
         output.printf(
                 "Daily flight movements: %d%n",
