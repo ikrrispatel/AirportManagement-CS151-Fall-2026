@@ -143,7 +143,8 @@ public class Booking {
         }
 
         if (status == BookingStatus.CONFIRMED
-                || status == BookingStatus.CHECKED_IN) {
+                || status == BookingStatus.CHECKED_IN
+                || status == BookingStatus.REBOOKED) {
             flight.releaseSeat(seatNumber);
             flight.removePassenger(passenger);
         }
@@ -152,7 +153,8 @@ public class Booking {
     }
 
     public void changeSeat(String newSeatNumber) {
-        if (status != BookingStatus.CONFIRMED) {
+        if (status != BookingStatus.CONFIRMED
+                && status != BookingStatus.REBOOKED) {
             throw new InvalidBookingStateException(
                     "Only confirmed bookings can change seats.");
         }
@@ -186,7 +188,8 @@ public class Booking {
     }
 
     public void markCheckedIn() {
-        if (status != BookingStatus.CONFIRMED) {
+        if (status != BookingStatus.CONFIRMED
+                && status != BookingStatus.REBOOKED) {
             throw new InvalidBookingStateException(
                 "Only confirmed bookings can be checked in.");
         }
@@ -205,30 +208,54 @@ public class Booking {
     }
 
     public void markRebooked(Flight replacementFlight) {
-        Objects.requireNonNull(replacementFlight, "Replacement Flight cannot be null");
+        Objects.requireNonNull(
+                replacementFlight,
+                "Replacement flight cannot be null.");
+
         if (status == BookingStatus.CANCELED
                 || status == BookingStatus.BOARDED) {
-                    throw new InvalidBookingStateException(
-                            "This booking cannot be rebooked.");
+            throw new InvalidBookingStateException(
+                    "This booking cannot be rebooked.");
+        }
+
+        if (flight.equals(replacementFlight)) {
+            throw new IllegalArgumentException(
+                    "Replacement flight must be different.");
         }
 
         replacementFlight.validateTravelDocuments(passenger);
+
+        if (replacementFlight.hasPassenger(passenger)) {
+            throw new IllegalStateException(
+                    "Passenger is already on the replacement flight.");
+        }
 
         if (!replacementFlight.hasAvailableSeat()) {
             throw new IllegalStateException(
                     "Replacement flight has no available seats.");
         }
 
+        replacementFlight.reserveSeat(seatNumber);
+
         if (status == BookingStatus.CONFIRMED
-                || status == BookingStatus.CHECKED_IN) {
+                || status == BookingStatus.CHECKED_IN
+                || status == BookingStatus.REBOOKED) {
             flight.releaseSeat(seatNumber);
             flight.removePassenger(passenger);
+        } else if (status == BookingStatus.STANDBY) {
+            if (flight.isOnStandby(passenger)) {
+                flight.removeFromStandby(passenger);
+            } else if (flight.hasPassenger(passenger)) {
+                flight.removePassenger(passenger);
+            }
         }
-        
+
+        replacementFlight.addPassenger(passenger);
         flight = replacementFlight;
         status = BookingStatus.REBOOKED;
+        calculateTotalFare();
     }
-    
+
     @Override 
     public boolean equals(Object other) {
         if (this == other)

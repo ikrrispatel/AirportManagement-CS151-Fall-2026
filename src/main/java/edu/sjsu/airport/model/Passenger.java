@@ -96,8 +96,7 @@ public class Passenger
 
         for (Booking booking : bookings) {
             if (booking.getFlight().equals(flight)
-                    && booking.getStatus() != BookingStatus.CANCELED
-                    && booking.getStatus() != BookingStatus.REBOOKED) {
+                    && booking.getStatus() != BookingStatus.CANCELED) {
                 throw new IllegalStateException(
                         "Passenger already has an active booking for this flight.");
             }
@@ -121,8 +120,7 @@ public class Passenger
 
         for (Booking existing : bookings) {
             if (existing.getFlight().equals(booking.getFlight())
-                    && existing.getStatus() != BookingStatus.CANCELED
-                    && existing.getStatus() != BookingStatus.REBOOKED) {
+                    && existing.getStatus() != BookingStatus.CANCELED) {
                 throw new IllegalStateException(
                         "Passenger already has an active booking for this flight.");
             }
