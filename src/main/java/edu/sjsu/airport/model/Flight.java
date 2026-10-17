@@ -2,7 +2,7 @@ package edu.sjsu.airport.model;
 
 import edu.sjsu.airport.enums.FlightStatus;
 import edu.sjsu.airport.interfaces.Trackable;
-import edu.sjsu.airport.exceptions.FlightFullException;
+import edu.sjsu.airport.exception.FlightFullException;
 
 import java.time.LocalDateTime;
 import java.util.*;

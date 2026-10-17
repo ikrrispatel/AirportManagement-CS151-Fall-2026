@@ -1,6 +1,6 @@
 package edu.sjsu.airport.model;
 
-import edu.sjsu.airport.exceptions.InvalidTravelDocumentException;
+import edu.sjsu.airport.exception.InvalidTravelDocumentException;
 
 import java.time.LocalDateTime;
 

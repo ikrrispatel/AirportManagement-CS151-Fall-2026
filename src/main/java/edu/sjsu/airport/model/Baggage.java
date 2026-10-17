@@ -1,6 +1,9 @@
 package edu.sjsu.airport.model;
 
-public class Baggage {
+import edu.sjsu.airport.interfaces.Trackable;
+import java.util.Locale;
+
+public class Baggage implements Trackable {
     private final String tagNumber;
     private final Passenger owner;
     private Flight assignedFlight;
@@ -123,6 +126,55 @@ public class Baggage {
 
         status = BaggageStatus.CLAIMED;
         assignedFlight = null;
+    }
+
+    public void markInTransit() {
+        if (status != BaggageStatus.LOADED) {
+            throw new IllegalStateException("Baggage must be loaded before transit");
+        }
+
+        status = BaggageStatus.IN_TRANSIT;
+    }
+
+    @Override
+    public String getCurrentStatus() {
+        return status.toString();
+    }
+
+    @Override
+    public void updateStatus(String newStatus) {
+        if (newStatus == null || newStatus.isBlank()) {
+            throw new IllegalArgumentException("Baggage status cannot be blank");
+        }
+
+        BaggageStatus requestedStatus;
+        try {
+            requestedStatus = BaggageStatus.valueOf(
+                    newStatus.trim().toUpperCase(Locale.ROOT));
+        } catch (IllegalArgumentException exception) {
+            throw new IllegalArgumentException(
+                    "Invalid baggage status: " + newStatus);
+        }
+
+        switch (requestedStatus) {
+            case LOADED -> loadOnFlight();
+            case IN_TRANSIT -> markInTransit();
+            case READY_FOR_CLAIM -> markReadyForClaim();
+            case CLAIMED -> markClaimed();
+            default -> throw new IllegalStateException(
+                    "Baggage status cannot be manually changed to "
+                            + requestedStatus);
+        }
+    }
+
+    @Override
+    public String getTrackingSummary() {
+        return "Baggage " + tagNumber
+                + ": status=" + status
+                + ", location=" + currentLocation
+                + ", flight=" + (assignedFlight == null
+                ? "Unassigned"
+                : assignedFlight.getFlightNumber());
     }
 
     @Override

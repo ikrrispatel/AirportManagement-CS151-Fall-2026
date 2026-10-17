@@ -1,4 +1,4 @@
-package edu.sjsu.airport.exceptions;
+package edu.sjsu.airport.exception;
 
 public class FlightFullException extends RuntimeException {
     public FlightFullException(String message) {
