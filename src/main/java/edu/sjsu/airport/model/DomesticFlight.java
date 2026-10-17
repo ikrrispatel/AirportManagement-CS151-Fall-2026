@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 public class DomesticFlight extends Flight {
     private static final double RESIDENT_DISCOUNT_RATE = 0.10;
+    private static final int REQUIRED_ARRIVAL_MINUTES = 120;
 
     private String operatingState;
     private double domesticTaxRate;
@@ -56,8 +57,7 @@ public class DomesticFlight extends Flight {
 
     @Override
     public int getRequiredArrivalMinutes() {
-        // TODO: implement domestic arrival requirement
-        return 0;
+        return REQUIRED_ARRIVAL_MINUTES;
     }
 
     // --- Business methods --- //
