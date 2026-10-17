@@ -46,8 +46,13 @@ public class InternationalFlight extends Flight {
 
     @Override
     public double calculateTravelFee(double baseFare) {
-        // TODO: implement international travel fee calculation
-        return 0.0;
+        if (!Double.isFinite(baseFare) || baseFare < 0) {
+            throw new IllegalArgumentException("Base fare must be a finite, non-negative value.");
+        }
+
+        double internationalTax = calculateInternationalTax(baseFare);
+
+        return baseFare + internationalTax;
     }
 
     @Override
