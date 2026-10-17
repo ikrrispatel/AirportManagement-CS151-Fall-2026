@@ -90,7 +90,7 @@ GitHub Actions runs the Maven test suite for pushes and pull requests targeting 
 
 ## UML Diagram
 
-The project UML diagram is available at [UML.svg](UML.svg).
+![Airport Management System UML Diagram](UML.svg)
 
 ## Developers
 
