@@ -44,8 +44,14 @@ public class DomesticFlight extends Flight {
 
     @Override
     public double calculateTravelFee(double baseFare) {
-        // TODO: implement domestic travel fee calculation
-        return 0.0;
+        if (!Double.isFinite(baseFare) || baseFare < 0) {
+            throw new IllegalArgumentException("Base fare must be a finite, non-negative value.");
+        }
+
+        double discountedFare = applyResidentDiscount(baseFare);
+        double domesticTax = calculateDomesticTax(discountedFare);
+
+        return discountedFare + domesticTax;
     }
 
     @Override
