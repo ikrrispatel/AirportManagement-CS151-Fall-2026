@@ -29,7 +29,7 @@ public class DomesticFlight extends Flight {
             throw new IllegalArgumentException("Operating State cannot be null or blank");
         }
 
-        if (domesticTaxRate < 0) {
+        if (!Double.isFinite(domesticTaxRate) || domesticTaxRate < 0) {
             throw new IllegalArgumentException("Domestic Tax Rate cannot be negative");
         }
 
@@ -77,7 +77,7 @@ public class DomesticFlight extends Flight {
     }
 
     public double calculateDomesticTax(double baseFare) {
-        if (baseFare < 0) {
+        if (!Double.isFinite(baseFare) || baseFare < 0) {
             throw new IllegalArgumentException("Base fare cannot be negative.");
         }
 

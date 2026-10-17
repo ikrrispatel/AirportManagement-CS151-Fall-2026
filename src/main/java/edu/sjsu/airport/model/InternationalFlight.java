@@ -30,7 +30,7 @@ public class InternationalFlight extends Flight {
             throw new IllegalArgumentException("Destination Country cannot be null or blank");
         }
 
-        if (internationalTaxRate < 0) {
+        if (!Double.isFinite(internationalTaxRate) || internationalTaxRate < 0) {
             throw new IllegalArgumentException("International Tax Rate cannot be negative");
         }
 
@@ -89,7 +89,7 @@ public class InternationalFlight extends Flight {
     }
 
     public double calculateInternationalTax(double baseFare) {
-        if (baseFare < 0) {
+        if (!Double.isFinite(baseFare) || baseFare < 0) {
             throw new IllegalArgumentException("Base fare cannot be negative.");
         }
 

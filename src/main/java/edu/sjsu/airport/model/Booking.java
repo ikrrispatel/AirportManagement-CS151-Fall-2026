@@ -41,7 +41,7 @@ public class Booking {
         this.flight = Objects.requireNonNull(flight, "Flight cannot be null.");
         this.seatNumber = requireText(seatNumber, "Seat number");
 
-        if (baseFare < 0) {
+        if (!Double.isFinite(baseFare) || baseFare < 0) {
             throw new IllegalArgumentException(
                     "Base fare cannot be negative.");
         }
