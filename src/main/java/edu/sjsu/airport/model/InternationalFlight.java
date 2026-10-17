@@ -106,4 +106,16 @@ public class InternationalFlight extends Flight {
     public LocalDateTime determineInternationalCheckInDeadline() {
         return getDepartureTime().minusMinutes(getRequiredArrivalMinutes());
     }
+
+    // --- Overrides from Parent Class --- //
+    @Override
+    public String toString() {
+        return "InternationalFlight{"
+                + "flight=" + super.toString()
+                + ", destinationCountry='" + destinationCountry + '\''
+                + ", internationalTaxRate=" + internationalTaxRate
+                + ", customsRequirements=" + customsRequirements
+                + ", visaRequired=" + visaRequired
+                + '}';
+    }
 }

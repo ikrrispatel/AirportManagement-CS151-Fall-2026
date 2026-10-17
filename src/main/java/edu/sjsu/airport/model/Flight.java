@@ -291,4 +291,19 @@ public abstract class Flight implements Trackable {
     public int getDelayMinutes() {
         return delayMinutes;
     }
+
+    // --- Overrides from Parent Class --- //
+    @Override
+    public String toString() {
+        return "Flight{"
+                + "flightNumber='" + flightNumber + '\''
+                + ", origin='" + origin + '\''
+                + ", destination='" + destination + '\''
+                + ", departureTime=" + departureTime
+                + ", arrivalTime=" + arrivalTime
+                + ", capacity=" + capacity
+                + ", status=" + status
+                + ", delayMinutes=" + delayMinutes
+                + '}';
+    }
 }

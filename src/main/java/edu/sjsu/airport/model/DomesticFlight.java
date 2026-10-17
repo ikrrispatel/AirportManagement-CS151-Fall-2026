@@ -104,4 +104,15 @@ public class DomesticFlight extends Flight {
             return 3;
         }
     }
+
+    // --- Overrides from Parent Class --- //
+    @Override
+    public String toString() {
+        return "DomesticFlight{"
+                + "flight=" + super.toString()
+                + ", operatingState='" + operatingState + '\''
+                + ", domesticTaxRate=" + domesticTaxRate
+                + ", residentDiscountAvailable=" + residentDiscountAvailable
+                + '}';
+    }
 }
