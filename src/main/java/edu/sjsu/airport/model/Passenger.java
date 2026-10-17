@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import edu.sjsu.airport.enums.BookingStatus;
+
 public class Passenger
 {
 /**
@@ -68,14 +70,14 @@ public class Passenger
         return List.copyOf(bookings);
     }
 
-    public List<Baggage> getBaggages() {
-        return List.copyOf(baggageItems)
+    public List<Baggage> getBaggageItems() {
+        return List.copyOf(baggageItems);
     }
 
     private static String requireText(String value, String fieldName) {
         if (value == null || value.isBlank()) {
             throw new IllegalArgumentException(
-                    fieldName + "cannot be blank");
+                    fieldName + " cannot be blank.");
         }
 
         return value.trim();
@@ -88,13 +90,17 @@ public class Passenger
         
         return value.trim();
     }
-
+    
     public void requestBooking(Flight flight) {
         Objects.requireNonNull(flight, "Flight cannot be null");
 
-        if (hasBookingForFlight (flight)) {
-            throw new IllegalStateException(
-                "Passenger already has a booking for this flight");
+        for (Booking booking : bookings) {
+            if (booking.getFlight().equals(flight)
+                    && booking.getStatus() != BookingStatus.CANCELED
+                    && booking.getStatus() != BookingStatus.REBOOKED) {
+                throw new IllegalStateException(
+                        "Passenger already has an active booking for this flight.");
+            }
         }
 
         flight.validateTravelDocuments(this);
@@ -103,15 +109,23 @@ public class Passenger
     public void addBooking(Booking booking) {
         Objects.requireNonNull(booking, "Booking cannot be null");
 
-
         if (!this.equals(booking.getPassenger())) {
             throw new IllegalArgumentException(
-                "Booking belongs to a different passenger.");
+                    "Booking belongs to a different passenger.");
         }
 
         if (bookings.contains(booking)) {
             throw new IllegalArgumentException(
-                "Passenger already has this booking.");
+                    "Passenger already has this booking.");
+        }
+
+        for (Booking existing : bookings) {
+            if (existing.getFlight().equals(booking.getFlight())
+                    && existing.getStatus() != BookingStatus.CANCELED
+                    && existing.getStatus() != BookingStatus.REBOOKED) {
+                throw new IllegalStateException(
+                        "Passenger already has an active booking for this flight.");
+            }
         }
 
         bookings.add(booking);
@@ -149,7 +163,7 @@ public class Passenger
 
         if (baggageItems.contains(baggage)) {
             throw new IllegalArgumentException(
-                "Baggage is already assigned to this paasenger");
+                "Baggage is already assigned to this passenger");
         }
 
         baggageItems.add(baggage);
@@ -164,14 +178,28 @@ public class Passenger
         }
     }
 
-    public String viewIternary() {
+    public String viewItinerary() {
         if (bookings.isEmpty()) {
-            return "No booking found for pasenger";
+            return "No booking found for passenger";
         }
+
+        StringBuilder itinerary = new StringBuilder();
+        itinerary.append("Itinerary for ")
+                .append(fullName)
+                .append(" (")
+                .append(passengerId)
+                .append("):");
+        
+        for (Booking booking : bookings) {
+            itinerary.append(System.lineSeparator())
+                    .append(booking);
+        }
+
+        return itinerary.toString();
     }
 
     public boolean checkConnectionRisk() {
-        return booking.size() > 1;
+        return bookings.size() > 1;
     }
 
     @Override 

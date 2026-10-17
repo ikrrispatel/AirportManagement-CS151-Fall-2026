@@ -88,7 +88,7 @@ public class Booking {
     private static String requireText(String value, String fieldName) {
         if (value == null || value.isBlank()) {
             throw new IllegalArgumentException(
-                    fieldName + "cannot be blank");
+                    fieldName + " cannot be blank.");
         }
 
         return value.trim();
@@ -97,15 +97,17 @@ public class Booking {
     public void confirmBooking() {
         if (status != BookingStatus.PENDING
                 && status != BookingStatus.STANDBY) {
-                    throw new IllegalStateException(
-                        "Only pending or standby bookings can be confirmed.");
+            throw new InvalidBookingStateException(
+                    "Only pending or standby bookings can be confirmed.");
         }
 
         if (!flight.hasAvailableSeat()) {
             throw new IllegalStateException(
-                "Flight has no available seats.");
+                    "Flight has no available seats.");
         }
-        flight.validateTravelDocuents(passenger);
+
+        flight.validateTravelDocuments(passenger);
+
         flight.reserveSeat(seatNumber);
         flight.addPassenger(passenger);
 
@@ -115,31 +117,52 @@ public class Booking {
 
     public void cancelBooking() {
         if (status == BookingStatus.CANCELED) {
-            throw new IllegalStateException(
-                "Booking is already canceled.");
+            throw new InvalidBookingStateException(
+                    "Booking is already canceled.");
         }
 
         if (status == BookingStatus.BOARDED) {
-            throw new IllegalStateException(
-                "A boarded booking cannot be canceled.");
+            throw new InvalidBookingStateException(
+                    "A boarded booking cannot be canceled.");
+        }
+
+        if (status == BookingStatus.CONFIRMED
+                || status == BookingStatus.CHECKED_IN) {
+            flight.releaseSeat(seatNumber);
+            flight.removePassenger(passenger);
         }
 
         status = BookingStatus.CANCELED;
     }
 
     public void changeSeat(String newSeatNumber) {
+        if (status != BookingStatus.CONFIRMED) {
+            throw new InvalidBookingStateException(
+                    "Only confirmed bookings can change seats.");
+        }
 
+        String validatedSeat =
+                requireText(newSeatNumber, "Seat number");
+
+        if (validatedSeat.equalsIgnoreCase(seatNumber)) {
+            throw new IllegalArgumentException(
+                    "New seat must be different from the current seat.");
+        }
+
+        flight.reserveSeat(validatedSeat);
+        flight.releaseSeat(seatNumber);
+        seatNumber = validatedSeat;
     }
 
     public double calculateTotalFare() {
-        totalFare = 
-                baseFare + flight.calculateTravelFee(passenger);
+        totalFare =
+                baseFare + flight.calculateTravelFee(baseFare);
         return totalFare;
     }
 
     public void moveToStandby() {
         if (status != BookingStatus.PENDING) {
-            throw new IllegalStateException(
+            throw new InvalidBookingStateException(
                     "Only pending bookings can move to standby");
         }
 
@@ -170,7 +193,7 @@ public class Booking {
         Objects.requireNonNull(replacementFlight, "Replacement Flight cannot be null");
         if (status == BookingStatus.CANCELED
                 || status == BookingStatus.BOARDED) {
-                    throw new IllegalStateException(
+                    throw new InvalidBookingStateException(
                             "This booking cannot be rebooked.");
         }
 
