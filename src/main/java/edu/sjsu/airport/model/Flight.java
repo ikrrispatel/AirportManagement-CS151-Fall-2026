@@ -188,6 +188,21 @@ public abstract class Flight implements Trackable {
         }
     }
 
+    public void cancelFlight() {
+        if (status == FlightStatus.DEPARTED
+                || status == FlightStatus.ARRIVED) {
+            throw new IllegalStateException(
+                    "A departed or arrived flight cannot be canceled.");
+        }
+
+        if (status == FlightStatus.CANCELED) {
+            throw new IllegalStateException(
+                    "Flight is already canceled.");
+        }
+
+        status = FlightStatus.CANCELED;
+    }
+
     public void openBoarding() {
         switch (status) {
             case SCHEDULED, DELAYED -> status = FlightStatus.BOARDING;
@@ -242,7 +257,7 @@ public abstract class Flight implements Trackable {
         FlightStatus newFlightStatus;
 
         try {
-            newFlightStatus = FlightStatus.valueOf(newStatus.toUpperCase());
+            newFlightStatus = FlightStatus.valueOf(newStatus.trim().toUpperCase(Locale.ROOT));
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Invalid flight status: " + newStatus);
         }
