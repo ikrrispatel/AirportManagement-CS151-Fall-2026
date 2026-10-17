@@ -292,7 +292,25 @@ public abstract class Flight implements Trackable {
         return delayMinutes;
     }
 
-    // --- Overrides from Parent Class --- //
+    // --- Object Method Overrides --- //
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+
+        if (!(other instanceof Flight flight)) {
+            return false;
+        }
+
+        return flightNumber.equals(flight.flightNumber) && departureTime.equals(flight.departureTime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(flightNumber, departureTime);
+    }
+
     @Override
     public String toString() {
         return "Flight{"
