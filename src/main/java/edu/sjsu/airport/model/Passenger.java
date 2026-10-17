@@ -33,25 +33,10 @@ public class Passenger
             String passportNumber,
             boolean visaApproved) {
 
-        if (passengerId == null || passengerId.isBlank()) {
-            throw new IllegalArgumentException(
-                    "Passenger ID cannot be blank.");
-        }
-
-        if (fullName == null || fullName.isBlank()) {
-            throw new IllegalArgumentException(
-                    "Full name cannot be blank.");
-        }
-
-        if (governmentId == null || governmentId.isBlank()) {
-            throw new IllegalArgumentException(
-                    "Government ID cannot be blank.");
-        }
-
-        this.passengerId = passengerId;
-        this.fullName = fullName;
-        this.governmentId = governmentId;
-        this.passportNumber = passportNumber;
+        this.passengerId = requireText(passengerId, "Passenger ID");
+        this.fullName = requireText(fullName, "Full name");
+        this.governmentId = requireText(governmentId, "Government ID");
+        this.passportNumber = normalizeOptionalText(passportNumber);
         this.visaApproved = visaApproved;
         this.bookings = new ArrayList<>();
         this.baggageItems = new ArrayList<>();
@@ -182,6 +167,10 @@ public class Passenger
         if (bookings.isEmpty()) {
             return "No booking found for pasenger";
         }
+    }
+
+    public boolean checkConnectionRisk() {
+        return booking.size() > 1;
     }
 
     @Override 
