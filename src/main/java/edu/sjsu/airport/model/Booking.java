@@ -45,10 +45,6 @@ public class Booking {
                     "Base fare cannot be negative.");
         }
 
-        this.confirmationNumber = confirmationNumber;
-        this.passenger = passenger;
-        this.flight = flight;
-        this.seatNumber = seatNumber;
         this.baseFare = baseFare;
         this.totalFare = baseFare;
         this.status = BookingStatus.PENDING;
