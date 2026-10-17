@@ -20,7 +20,7 @@ Airport staff can register operational objects, manage flight and booking lifecy
 - One shared Scanner with validated input
 - Global `EXIT` command at every prompt
 
-## Object-Oriented Design
+## Design
 
 `Flight` is an abstract class extended by `DomesticFlight` and `InternationalFlight`. Each subclass provides its own document validation, fare calculation, and required arrival time.
 
@@ -51,7 +51,7 @@ JUnit tests are under `src/test/java/edu/sjsu/airport/`.
 - Apache Maven 3.9 or newer
 - Git
 
-## Installation and Build
+## Installation Instructions
 
 ```bash
 git clone https://github.com/ikrrispatel/AirportManagement-CS151-Fall-2026.git
@@ -60,7 +60,7 @@ mvn clean test
 mvn clean package
 ```
 
-## Running the Application
+## Usage
 
 ```bash
 java -cp target/classes edu.sjsu.airport.ui.AirportConsoleApplication
@@ -90,7 +90,7 @@ GitHub Actions runs the Maven test suite for pushes and pull requests targeting 
 
 ## UML Diagram
 
-![Airport Management System UML Diagram](UML.svg)
+![Airport Management System UML Diagram](UML.png)
 
 ## Developers
 
@@ -99,6 +99,6 @@ GitHub Actions runs the Maven test suite for pushes and pull requests targeting 
 - Thinh Nguyen — Passenger, Booking, BookingStatus, and reservation workflows
 - Mohammed Rahman — Gate, Baggage, BaggageStatus, and tracking workflows
 
-## Development Workflow
+## Contributions
 
 Development occurs on separately named branches. Changes are reviewed, tested with Maven, and merged into `main` through pull requests.
