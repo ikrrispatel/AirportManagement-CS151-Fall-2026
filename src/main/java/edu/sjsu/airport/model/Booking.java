@@ -171,8 +171,7 @@ public class Booking {
     }
 
     public double calculateTotalFare() {
-        totalFare =
-                baseFare + flight.calculateTravelFee(baseFare);
+        totalFare = flight.calculateTravelFee(baseFare);
         return totalFare;
     }
 
