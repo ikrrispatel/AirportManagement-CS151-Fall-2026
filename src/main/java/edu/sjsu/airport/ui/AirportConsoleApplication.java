@@ -70,7 +70,7 @@ public final class AirportConsoleApplication {
             int choice = input.readInt(
                     "Select an option: ",
                     0,
-                    12);
+                    13);
 
             running = handleMainChoice(choice);
         }
@@ -95,6 +95,10 @@ public final class AirportConsoleApplication {
                     input,
                     output).run();
             case 12 -> new BookingConsole(
+                    system,
+                    input,
+                    output).run();
+            case 13 -> new GateBaggageConsole(
                     system,
                     input,
                     output).run();
@@ -342,6 +346,7 @@ public final class AirportConsoleApplication {
         output.println("10. Reset an airport's daily traffic");
         output.println("11. Manage flights and passengers");
         output.println("12. Manage bookings");
+        output.println("13. Manage gates and baggage");
         output.println("0. Exit");
     }
 
