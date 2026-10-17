@@ -251,7 +251,7 @@ public abstract class Flight implements Trackable {
     // --- Abstracts methods --- //
     public abstract void validateTravelDocuments(Passenger passenger);
 
-    public abstract double calculateTravelFee(Passenger passenger);
+    public abstract double calculateTravelFee(double baseFare);
 
     public abstract int getRequiredArrivalMinutes();
 

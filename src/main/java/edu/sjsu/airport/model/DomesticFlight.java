@@ -43,7 +43,7 @@ public class DomesticFlight extends Flight {
     }
 
     @Override
-    public double calculateTravelFee(Passenger passenger) {
+    public double calculateTravelFee(double baseFare) {
         // TODO: implement domestic travel fee calculation
         return 0.0;
     }

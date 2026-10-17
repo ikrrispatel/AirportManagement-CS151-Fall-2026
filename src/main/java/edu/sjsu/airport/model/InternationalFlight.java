@@ -45,7 +45,7 @@ public class InternationalFlight extends Flight {
     }
 
     @Override
-    public double calculateTravelFee(Passenger passenger) {
+    public double calculateTravelFee(double baseFare) {
         // TODO: implement international travel fee calculation
         return 0.0;
     }
