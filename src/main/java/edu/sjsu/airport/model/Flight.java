@@ -78,6 +78,25 @@ public abstract class Flight implements Trackable {
         return passengers.size() < capacity;
     }
 
+    public boolean hasPassenger(Passenger passenger) {
+        return passenger != null && passengers.contains(passenger);
+    }
+
+    public boolean isOnStandby(Passenger passenger) {
+        return passenger != null && standbyQueue.contains(passenger);
+    }
+
+    public void removeFromStandby(Passenger passenger) {
+        if (passenger == null) {
+            throw new IllegalArgumentException("Passenger cannot be null.");
+        }
+
+        if (!standbyQueue.remove(passenger)) {
+            throw new IllegalArgumentException(
+                    "Passenger is not on this flight's standby queue.");
+        }
+    }
+
     public void addPassenger(Passenger passenger) {
         if (passenger == null) {
             throw new IllegalArgumentException("Passenger cannot be null.");
