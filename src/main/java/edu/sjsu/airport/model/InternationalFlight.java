@@ -6,6 +6,8 @@ import java.time.*;
 import java.util.*;
 
 public class InternationalFlight extends Flight {
+    private static final int REQUIRED_ARRIVAL_MINUTES = 180;
+
     private String destinationCountry;
     private double internationalTaxRate;
     private List<String> customsRequirements;
@@ -57,8 +59,7 @@ public class InternationalFlight extends Flight {
 
     @Override
     public int getRequiredArrivalMinutes() {
-        // TODO: implement international arrival requirement
-        return 0;
+        return REQUIRED_ARRIVAL_MINUTES;
     }
 
     // --- Business methods --- //
