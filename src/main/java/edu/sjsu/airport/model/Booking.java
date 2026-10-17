@@ -1,6 +1,10 @@
 package edu.sjsu.airport.model;
-import java.util.Objects;
+
 import edu.sjsu.airport.enums.BookingStatus;
+
+import java.util.Objects;
+import java.security.cert.PKIXReason;
+import java.time.LocalDateTime;
 
 public class Booking {
 /**
@@ -15,6 +19,7 @@ public class Booking {
     private final double baseFare;
     private double totalFare;
     private BookingStatus status;
+    private final LocalDateTime createdAt;
     
     /**
      * @param confirmationNumber unique booking confirmation number
@@ -28,51 +33,26 @@ public class Booking {
             Passenger passenger,
             Flight flight,
             String seatNumber,
-            double baseFare,
-            double totalFare,
-            BookingStatus status) {
-        if (confirmationNumber == null
-            || confirmationNumber.isBlank()) {
-            throw new IllegalArgumentException(
-                "Confirmation number cannot be blank.");
-        }
-
-        if (passenger == null) {
-            throw new IllegalArgumentException(
-                    "Passenger cannot be null.");
-        }
-
-        if (flight == null) {
-            throw new IllegalArgumentException(
-                    "Flight cannot be null.");
-        }
-
-        if (seatNumber == null || seatNumber.isBlank()) {
-            throw new IllegalArgumentException(
-                    "Seat number cannot be blank.");
-        }
+            double baseFare) {
+        
+        this.confirmationNumber = requireText(confirmationNumber, "Confirmation Number"); 
+        this.passenger = Objects.requireNonNull(passenger, "Passenger cannot be null.");
+        this.flight = Objects.requireNonNull(flight, "Flight cannot be null.");
+        this.seatNumber = requireText(seatNumber, "Seat number");
 
         if (baseFare < 0) {
             throw new IllegalArgumentException(
                     "Base fare cannot be negative.");
         }
 
-        if (totalFare < 0) {
-            throw new IllegalArgumentException(
-                "Total fare cannot be negative.");
-        }
-        if (status == null) {
-            throw new IllegalArgumentException(
-                "Booking status cannot be null.");
-        }
-        
         this.confirmationNumber = confirmationNumber;
         this.passenger = passenger;
         this.flight = flight;
         this.seatNumber = seatNumber;
         this.baseFare = baseFare;
-        this.totalFare = totalFare;
-        this.status = status;
+        this.totalFare = baseFare;
+        this.status = BookingStatus.PENDING;
+        this.createdAt = LocalDateTime.now();
     }
 
     public String getConfirmationNumber() {
@@ -103,6 +83,39 @@ public class Booking {
         return status;
     }
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    
+    private static String requireText(String value, String fieldName) {
+        if (value == null || value.isBlank()) {
+            throw new IllegalArgumentException(
+                    fieldName + "cannot be blank");
+        }
+
+        return value.trim();
+    }
+    
+    public void confirmBooking() {
+        if (status != BookingStatus.PENDING
+                && status != BookingStatus.STANDBY) {
+                    throw new IllegalStateException(
+                        "Only pending or standby bookings can be confirmed.");
+        }
+
+        if (!flight.hasAvailableSeat()) {
+            throw new IllegalStateException(
+                "Flight has no available seats.");
+        }
+        flight.validateTravelDocuents(passenger);
+        flight.reserveSeat(seatNumber);
+        flight.addPassenger(passenger);
+
+        status = BookingStatus.CONFIRMED;
+        calculateTotalFare();
+    }
+
     public void cancelBooking() {
         if (status == BookingStatus.CANCELED) {
             throw new IllegalStateException(
@@ -117,12 +130,33 @@ public class Booking {
         status = BookingStatus.CANCELED;
     }
 
+    public void changeSeat(String newSeatNumber) {
+
+    }
+
+    public double calculateTotalFare() {
+        totalFare = 
+                baseFare + flight.calculateTravelFee(passenger);
+        return totalFare;
+    }
+
+    public void moveToStandby() {
+        if (status != BookingStatus.PENDING) {
+            throw new IllegalStateException(
+                    "Only pending bookings can move to standby");
+        }
+
+        flight.addToStandby(passenger);
+        status = BookingStatus.STANDBY;
+    }
+
     public void markCheckedIn() {
         if (status != BookingStatus.CONFIRMED) {
             throw new IllegalStateException(
                 "Only confirmed bookings can be checked in.");
         }
 
+        flight.validateTravelDocuments(passenger);
         status = BookingStatus.CHECKED_IN;
     }
 
@@ -133,6 +167,31 @@ public class Booking {
         }
 
         status = BookingStatus.BOARDED;
+    }
+
+    public void markRebooked(Flight replacementFlight) {
+        Objects.requireNonNull(replacementFlight, "Replacement Flight cannot be null");
+        if (status == BookingStatus.CANCELED
+                || status == BookingStatus.BOARDED) {
+                    throw new IllegalStateException(
+                            "This booking cannot be rebooked.");
+        }
+
+        replacementFlight.validateTravelDocuments(passenger);
+
+        if (!replacementFlight.hasAvailableSeat()) {
+            throw new IllegalStateException(
+                    "Replacement flight has no available seats.");
+        }
+
+        if (status == BookingStatus.CONFIRMED
+                || status == BookingStatus.CHECKED_IN) {
+            flight.releaseSeat(seatNumber);
+            flight.removePassenger(passenger);
+        }
+        
+        flight = replacementFlight;
+        status = BookingStatus.REBOOKED;
     }
     
     @Override 
@@ -162,9 +221,10 @@ public class Booking {
                 + ", passenger='" + passenger.getPassengerId() + '\''
                 + ", flight='" + flight + '\''
                 + ", seatNumber='" + seatNumber + '\''
-                + ", baseFare='" + baseFare + '\''
-                + ", totalFare='" + totalFare + '\''
+                + ", baseFare='" + baseFare
+                + ", totalFare='" + totalFare
                 + ", status=" + status
+                + ", createdAt=" + createdAt
                 + '}';
     }
 }
