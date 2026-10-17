@@ -70,7 +70,7 @@ public final class AirportConsoleApplication {
             int choice = input.readInt(
                     "Select an option: ",
                     0,
-                    10);
+                    11);
 
             running = handleMainChoice(choice);
         }
@@ -90,6 +90,10 @@ public final class AirportConsoleApplication {
             case 8 -> reportDisruption();
             case 9 -> resolveDisruption();
             case 10 -> resetAirportTraffic();
+            case 11 -> new FlightPassengerConsole(
+                    system,
+                    input,
+                    output).run();
             case 0 -> {
                 return false;
             }
@@ -332,6 +336,7 @@ public final class AirportConsoleApplication {
         output.println("8. Report an airport disruption");
         output.println("9. Resolve an airport disruption");
         output.println("10. Reset an airport's daily traffic");
+        output.println("11. Manage flights and passengers");
         output.println("0. Exit");
     }
 
