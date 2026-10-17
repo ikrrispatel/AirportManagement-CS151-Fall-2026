@@ -1,9 +1,10 @@
 package edu.sjsu.airport.model;
 
 import edu.sjsu.airport.enums.BookingStatus;
+import edu.sjsu.airport.exception.InvalidBookingStateException;
+import edu.sjsu.airport.exception.PassengerNotCheckedInException;
 
 import java.util.Objects;
-import java.security.cert.PKIXReason;
 import java.time.LocalDateTime;
 
 public class Booking {
@@ -148,7 +149,7 @@ public class Booking {
 
     public void markCheckedIn() {
         if (status != BookingStatus.CONFIRMED) {
-            throw new IllegalStateException(
+            throw new InvalidBookingStateException(
                 "Only confirmed bookings can be checked in.");
         }
 
@@ -158,7 +159,7 @@ public class Booking {
 
     public void markBoarded() {
         if (status != BookingStatus.CHECKED_IN) {
-            throw new IllegalStateException(
+            throw new PassengerNotCheckedInException(
                     "Passenger must check in before boarding.");
         }
 
