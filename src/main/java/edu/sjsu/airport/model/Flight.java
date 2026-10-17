@@ -309,6 +309,26 @@ public abstract class Flight implements Trackable {
         return assignedGate;
     }
 
+    void attachGate(Gate gate) {
+        Objects.requireNonNull(gate, "Gate cannot be null.");
+
+        if (assignedGate != null && assignedGate != gate) {
+            throw new IllegalStateException(
+                    "Flight is already assigned to another gate.");
+        }
+
+        assignedGate = gate;
+    }
+
+    void detachGate(Gate gate) {
+        if (assignedGate != gate) {
+            throw new IllegalStateException(
+                    "Flight is not assigned to this gate.");
+        }
+
+        assignedGate = null;
+    }
+
     public int getDelayMinutes() {
         return delayMinutes;
     }

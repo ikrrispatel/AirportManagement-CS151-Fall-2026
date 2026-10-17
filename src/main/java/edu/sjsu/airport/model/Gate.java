@@ -80,7 +80,11 @@ public class Gate {
             return false;
         }
 
-        return true;
+        if (flight.getCapacity() > maximumPassengerCapacity) {
+            return false;
+        }
+
+        return flight.getAssignedGate() == null;
     }
 
     public void assignFlight(Flight flight) {
@@ -92,6 +96,7 @@ public class Gate {
             throw new GateUnavailableException();
         }
 
+        flight.attachGate(this);
         assignedFlight = flight;
         available = false;
     }
@@ -101,6 +106,8 @@ public class Gate {
             throw new IllegalStateException("No Flight currently assigned to this gate");
         }
 
+        Flight releasedFlight = assignedFlight;
+        releasedFlight.detachGate(this);
         assignedFlight = null;
         available = true;
     }
