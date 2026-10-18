@@ -101,31 +101,32 @@ public class Booking {
                     "Only pending or standby bookings can be confirmed.");
         }
 
-        boolean alreadyPromoted =
-                status == BookingStatus.STANDBY
-                        && flight.hasPassenger(passenger);
+        flight.validateTravelDocuments(passenger);
 
-        if (!alreadyPromoted && !flight.hasAvailableSeat()) {
+        if (status == BookingStatus.STANDBY) {
+            if (!flight.hasPassenger(passenger)) {
+                throw new InvalidBookingStateException(
+                        "Standby passenger must be promoted before confirmation.");
+            }
+
+            flight.reserveSeat(seatNumber);
+            status = BookingStatus.CONFIRMED;
+            calculateTotalFare();
+            return;
+        }
+
+        if (!flight.hasAvailableSeat()) {
             throw new IllegalStateException(
                     "Flight has no available seats.");
         }
 
-        if (status == BookingStatus.PENDING
-                && flight.hasPassenger(passenger)) {
+        if (flight.hasPassenger(passenger)) {
             throw new InvalidBookingStateException(
                     "Passenger is already confirmed on this flight.");
         }
 
-        flight.validateTravelDocuments(passenger);
         flight.reserveSeat(seatNumber);
-
-        if (!alreadyPromoted) {
-            if (status == BookingStatus.STANDBY) {
-                flight.removeFromStandby(passenger);
-            }
-
-            flight.addPassenger(passenger);
-        }
+        flight.addPassenger(passenger);
 
         status = BookingStatus.CONFIRMED;
         calculateTotalFare();
