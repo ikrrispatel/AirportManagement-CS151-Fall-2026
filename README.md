@@ -78,7 +78,7 @@ Each registry stores at most 100 objects and rejects duplicate identifiers.
 
 ## Testing
 
-The project contains 91 passing JUnit tests covering models, services, console input, lifecycle transitions, limits, duplicates, cross-class integration, and polymorphism.
+The project contains 152 passing JUnit tests covering models, services, console input, lifecycle transitions, limits, duplicates, cross-class integration, and polymorphism.
 
 Run all tests with:
 

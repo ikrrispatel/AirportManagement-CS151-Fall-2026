@@ -1,5 +1,6 @@
 package edu.sjsu.airport.model;
 
+import edu.sjsu.airport.enums.BaggageStatus;
 import edu.sjsu.airport.enums.BookingStatus;
 import edu.sjsu.airport.exception.InvalidBookingStateException;
 
