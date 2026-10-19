@@ -311,10 +311,12 @@ public abstract class Flight implements Trackable {
             case CANCELED -> throw new IllegalStateException(
                     "Cannot delay a canceled flight.");
 
-            default -> {
+            case SCHEDULED -> {
                 delayMinutes = minutes;
                 status = FlightStatus.DELAYED;
             }
+
+            default -> delayMinutes = minutes;
         }
     }
 
