@@ -118,6 +118,26 @@ class AirportConsoleApplicationTest {
                 "Registered airports: 0/100"));
     }
 
+    @Test
+    void relocatesRegisteredAirportFromConsoleInput() {
+        TestSession session = runApplication(
+                registerSfoInput()
+                        + "14\n"
+                        + "SFO\n"
+                        + "San Jose\n"
+                        + "United States\n"
+                        + "0\n");
+
+        var airport = session.system()
+                .findAirport("SFO")
+                .orElseThrow();
+
+        assertEquals("San Jose", airport.getCity());
+        assertEquals("United States", airport.getCountry());
+        assertTrue(session.output().contains(
+                "SFO was relocated to San Jose, United States."));
+    }
+
     private TestSession runApplication(String text) {
         AirportManagementSystem system =
                 new AirportManagementSystem();
