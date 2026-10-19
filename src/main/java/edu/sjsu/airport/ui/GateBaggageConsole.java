@@ -2,7 +2,7 @@ package edu.sjsu.airport.ui;
 
 import edu.sjsu.airport.interfaces.Trackable;
 import edu.sjsu.airport.model.Baggage;
-import edu.sjsu.airport.model.BaggageStatus;
+import edu.sjsu.airport.enums.BaggageStatus;
 import edu.sjsu.airport.model.Flight;
 import edu.sjsu.airport.model.Gate;
 import edu.sjsu.airport.model.Passenger;
