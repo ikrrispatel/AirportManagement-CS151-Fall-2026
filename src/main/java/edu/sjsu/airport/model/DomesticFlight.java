@@ -26,22 +26,19 @@ public class DomesticFlight extends Flight {
         super(flightNumber, origin, destination, departureTime, arrivalTime, capacity);
 
         if (operatingState == null || operatingState.isBlank()) {
-            throw new IllegalArgumentException("Operating State cannot be null or blank");
+            throw new IllegalArgumentException(
+                    "Operating state cannot be null or blank.");
         }
 
         if (!Double.isFinite(domesticTaxRate) || domesticTaxRate < 0) {
-            throw new IllegalArgumentException("Domestic Tax Rate cannot be negative");
+            throw new IllegalArgumentException(
+                    "Domestic tax rate must be a finite, non-negative value.");
         }
 
         this.operatingState = operatingState;
         this.domesticTaxRate = domesticTaxRate;
         this.residentDiscountAvailable = residentDiscountAvailable;
     }
-    @Override
-    public boolean isInternational() {
-        return false;
-    }
-
 
     @Override
     public void validateTravelDocuments(Passenger passenger) {
@@ -51,7 +48,8 @@ public class DomesticFlight extends Flight {
     @Override
     public double calculateTravelFee(double baseFare) {
         if (!Double.isFinite(baseFare) || baseFare < 0) {
-            throw new IllegalArgumentException("Base fare must be a finite, non-negative value.");
+            throw new IllegalArgumentException(
+                    "Base fare must be a finite, non-negative value.");
         }
 
         double discountedFare = applyResidentDiscount(baseFare);
@@ -65,20 +63,28 @@ public class DomesticFlight extends Flight {
         return REQUIRED_ARRIVAL_MINUTES;
     }
 
-    // --- Business methods --- //
+    @Override
+    public boolean isInternational() {
+        return false;
+    }
+
+    // --- Business Methods --- //
     public void validateGovernmentId(Passenger passenger) {
         if (passenger == null) {
-            throw new IllegalArgumentException("Passenger cannot be null.");
+            throw new IllegalArgumentException(
+                    "Passenger cannot be null.");
         }
 
         if (passenger.getGovernmentId() == null || passenger.getGovernmentId().isBlank()) {
-            throw new InvalidTravelDocumentException("Passenger must have a valid government ID.");
+            throw new InvalidTravelDocumentException(
+                    "Passenger must have a valid government ID.");
         }
     }
 
     public double calculateDomesticTax(double baseFare) {
         if (!Double.isFinite(baseFare) || baseFare < 0) {
-            throw new IllegalArgumentException("Base fare cannot be negative.");
+            throw new IllegalArgumentException(
+                    "Base fare must be a finite, non-negative value.");
         }
 
         return baseFare * domesticTaxRate;
@@ -86,7 +92,8 @@ public class DomesticFlight extends Flight {
 
     public double applyResidentDiscount(double baseFare) {
         if (!Double.isFinite(baseFare) || baseFare < 0) {
-            throw new IllegalArgumentException("Base fare must be a finite, non-negative value.");
+            throw new IllegalArgumentException(
+                    "Base fare must be a finite, non-negative value.");
         }
 
         if (residentDiscountAvailable) {
@@ -98,7 +105,8 @@ public class DomesticFlight extends Flight {
 
     public int determineBoardingGroup(int seatRow) {
         if (seatRow <= 0) {
-            throw new IllegalArgumentException("Seat row must be greater than zero.");
+            throw new IllegalArgumentException(
+                    "Seat row must be greater than zero.");
         }
 
         if (seatRow >= 21) {
@@ -110,7 +118,7 @@ public class DomesticFlight extends Flight {
         }
     }
 
-    // --- Overrides from Parent Class --- //
+    // --- Object Method Overrides --- //
     @Override
     public String toString() {
         return "DomesticFlight{"
