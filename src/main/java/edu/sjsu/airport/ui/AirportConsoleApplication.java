@@ -70,7 +70,7 @@ public final class AirportConsoleApplication {
             int choice = input.readInt(
                     "Select an option: ",
                     0,
-                    13);
+                    14);
 
             running = handleMainChoice(choice);
         }
@@ -102,6 +102,7 @@ public final class AirportConsoleApplication {
                     system,
                     input,
                     output).run();
+            case 14 -> relocateAirport();
             case 0 -> {
                 return false;
             }
@@ -302,6 +303,33 @@ public final class AirportConsoleApplication {
         }
     }
 
+    private void relocateAirport() {
+        output.println();
+        output.println("Relocate Airport");
+
+        String code = input.readRequiredLine(
+                "Three-letter airport code: ");
+        String city = input.readRequiredLine(
+                "New city: ");
+        String country = input.readRequiredLine(
+                "New country: ");
+
+        try {
+            Airport airport = requireAirport(code);
+            airport.relocate(city, country);
+
+            output.printf(
+                    "%s was relocated to %s, %s.%n",
+                    airport.getAirportCode(),
+                    airport.getCity(),
+                    airport.getCountry());
+        } catch (RuntimeException exception) {
+            output.println(
+                    "Unable to relocate airport: "
+                            + exception.getMessage());
+        }
+    }
+
     private Airport requireAirport(String code) {
         return system.findAirport(code)
                 .orElseThrow(() ->
@@ -347,6 +375,7 @@ public final class AirportConsoleApplication {
         output.println("11. Manage flights and passengers");
         output.println("12. Manage bookings");
         output.println("13. Manage gates and baggage");
+        output.println("14. Relocate an airport");
         output.println("0. Exit");
     }
 
