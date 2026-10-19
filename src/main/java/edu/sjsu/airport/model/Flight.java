@@ -5,8 +5,14 @@ import edu.sjsu.airport.interfaces.Trackable;
 import edu.sjsu.airport.exception.FlightFullException;
 
 import java.time.LocalDateTime;
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.Queue;
+import java.util.Set;
 
 public abstract class Flight implements Trackable {
     private String flightNumber;
@@ -31,31 +37,38 @@ public abstract class Flight implements Trackable {
             int capacity) {
 
         if (flightNumber == null || flightNumber.isBlank()) {
-            throw new IllegalArgumentException("Flight number cannot be blank.");
+            throw new IllegalArgumentException(
+                    "Flight number cannot be blank.");
         }
 
         if (origin == null || origin.isBlank()) {
-            throw new IllegalArgumentException("Origin cannot be blank.");
+            throw new IllegalArgumentException(
+                    "Origin cannot be blank.");
         }
 
         if (destination == null || destination.isBlank()) {
-            throw new IllegalArgumentException("Destination cannot be blank.");
+            throw new IllegalArgumentException(
+                    "Destination cannot be blank.");
         }
 
         if (origin.equalsIgnoreCase(destination)) {
-            throw new IllegalArgumentException("Origin and destination cannot be the same.");
+            throw new IllegalArgumentException(
+                    "Origin and destination cannot be the same.");
         }
 
         if (departureTime == null || arrivalTime == null) {
-            throw new IllegalArgumentException("Flight times cannot be null.");
+            throw new IllegalArgumentException(
+                    "Flight times cannot be null.");
         }
 
         if (!departureTime.isBefore(arrivalTime)) {
-            throw new IllegalArgumentException("Departure must be before arrival.");
+            throw new IllegalArgumentException(
+                    "Departure must be before arrival.");
         }
 
         if (capacity <= 0) {
-            throw new IllegalArgumentException("Capacity must be greater than zero.");
+            throw new IllegalArgumentException(
+                    "Capacity must be greater than zero.");
         }
 
         this.flightNumber = flightNumber;
@@ -73,7 +86,7 @@ public abstract class Flight implements Trackable {
         this.delayMinutes = 0;
     }
 
-    // --- Businesses methods --- //
+    // --- Business Methods --- //
     public boolean hasAvailableSeat() {
         return passengers.size() < capacity;
     }
@@ -88,7 +101,8 @@ public abstract class Flight implements Trackable {
 
     public void removeFromStandby(Passenger passenger) {
         if (passenger == null) {
-            throw new IllegalArgumentException("Passenger cannot be null.");
+            throw new IllegalArgumentException(
+                    "Passenger cannot be null.");
         }
 
         if (!standbyQueue.remove(passenger)) {
@@ -99,15 +113,18 @@ public abstract class Flight implements Trackable {
 
     public void addPassenger(Passenger passenger) {
         if (passenger == null) {
-            throw new IllegalArgumentException("Passenger cannot be null.");
+            throw new IllegalArgumentException(
+                    "Passenger cannot be null.");
         }
 
         if (passengers.contains(passenger)) {
-            throw new IllegalArgumentException("Passenger is already on this flight.");
+            throw new IllegalArgumentException(
+                    "Passenger is already on this flight.");
         }
 
         if (!hasAvailableSeat()) {
-            throw new FlightFullException("Flight " + flightNumber + " is full.");
+            throw new FlightFullException(
+                    "Flight " + flightNumber + " is full.");
         }
 
         passengers.add(passenger);
@@ -115,11 +132,13 @@ public abstract class Flight implements Trackable {
 
     public void removePassenger(Passenger passenger) {
         if (passenger == null) {
-            throw new IllegalArgumentException("Passenger cannot be null.");
+            throw new IllegalArgumentException(
+                    "Passenger cannot be null.");
         }
 
         if (!passengers.contains(passenger)) {
-            throw new IllegalArgumentException("Passenger is not on this flight.");
+            throw new IllegalArgumentException(
+                    "Passenger is not on this flight.");
         }
 
         passengers.remove(passenger);
@@ -127,11 +146,13 @@ public abstract class Flight implements Trackable {
 
     public void addToStandby(Passenger passenger) {
         if (passenger == null) {
-            throw new IllegalArgumentException("Passenger cannot be null.");
+            throw new IllegalArgumentException(
+                    "Passenger cannot be null.");
         }
 
         if (passengers.contains(passenger) || standbyQueue.contains(passenger)) {
-            throw new IllegalArgumentException("Passenger is already on this flight.");
+            throw new IllegalArgumentException(
+                    "Passenger is already on this flight.");
         }
 
         standbyQueue.offer(passenger);
@@ -150,11 +171,13 @@ public abstract class Flight implements Trackable {
 
     public void reserveSeat(String seatNumber) {
         if (seatNumber == null || seatNumber.isBlank()) {
-            throw new IllegalArgumentException("Seat number cannot be blank.");
+            throw new IllegalArgumentException(
+                    "Seat number cannot be blank.");
         }
 
         if (reservedSeats.contains(seatNumber)) {
-            throw new IllegalArgumentException("Seat is already reserved.");
+            throw new IllegalArgumentException(
+                    "Seat is already reserved.");
         }
 
         reservedSeats.add(seatNumber);
@@ -162,24 +185,31 @@ public abstract class Flight implements Trackable {
 
     public void releaseSeat(String seatNumber) {
         if (seatNumber == null || seatNumber.isBlank()) {
-            throw new IllegalArgumentException("Seat number cannot be blank.");
+            throw new IllegalArgumentException(
+                    "Seat number cannot be blank.");
         }
 
         if (!reservedSeats.remove(seatNumber)) {
-            throw new IllegalArgumentException("Seat is not currently reserved.");
+            throw new IllegalArgumentException(
+                    "Seat is not currently reserved.");
         }
     }
 
     public void delayFlight(int minutes) {
         if (minutes <= 0) {
-            throw new IllegalArgumentException("Delay minutes must be greater than zero.");
+            throw new IllegalArgumentException(
+                    "Delay minutes must be greater than zero.");
         }
+
         switch (status) {
-            case DEPARTED -> throw new IllegalStateException("Cannot delay a departed flight.");
+            case DEPARTED -> throw new IllegalStateException(
+                    "Cannot delay a departed flight.");
 
-            case ARRIVED -> throw new IllegalStateException("Cannot delay an arrived flight.");
+            case ARRIVED -> throw new IllegalStateException(
+                    "Cannot delay an arrived flight.");
 
-            case CANCELED -> throw new IllegalStateException("Cannot delay a canceled flight.");
+            case CANCELED -> throw new IllegalStateException(
+                    "Cannot delay a canceled flight.");
 
             default -> {
                 delayMinutes = minutes;
@@ -207,51 +237,58 @@ public abstract class Flight implements Trackable {
         switch (status) {
             case SCHEDULED, DELAYED -> status = FlightStatus.BOARDING;
 
-            case CANCELED -> throw new IllegalStateException("Cannot open boarding for a canceled flight.");
+            case CANCELED -> throw new IllegalStateException(
+                    "Cannot open boarding for a canceled flight.");
 
-            case DEPARTED -> throw new IllegalStateException("Cannot open boarding for a departed flight.");
+            case DEPARTED -> throw new IllegalStateException(
+                    "Cannot open boarding for a departed flight.");
 
-            case ARRIVED -> throw new IllegalStateException("Cannot re-open boarding for an arrived flight.");
+            case ARRIVED -> throw new IllegalStateException(
+                    "Cannot re-open boarding for an arrived flight.");
 
-            default -> throw new IllegalStateException("Cannot open boarding when flight status is " + status);
+            default -> throw new IllegalStateException(
+                    "Cannot open boarding when flight status is " + status);
         }
     }
 
     public void closeBoarding() {
         if (status == FlightStatus.BOARDING) {
             status = FlightStatus.CLOSED;
-        }
-        else {
-            throw new IllegalStateException("Cannot close boarding when flight status is " + status);
+        } else {
+            throw new IllegalStateException(
+                    "Cannot close boarding when flight status is " + status);
         }
     }
 
     public void markDeparted() {
         if (status == FlightStatus.CLOSED) {
             status = FlightStatus.DEPARTED;
-        }
-        else {
-            throw new IllegalStateException("Cannot mark flight as departed when flight status is " + status);
+        } else {
+            throw new IllegalStateException(
+                    "Cannot mark flight as departed when flight status is " + status);
         }
     }
 
     public void markArrived() {
         if (status == FlightStatus.DEPARTED) {
             status = FlightStatus.ARRIVED;
-        }
-        else {
-            throw new IllegalStateException("Cannot mark flight as arrived when flight status is " + status);
+        } else {
+            throw new IllegalStateException(
+                    "Cannot mark flight as arrived when flight status is " + status);
         }
     }
 
-    // --- Interface methods --- //
+    // --- Interface Methods --- //
+    @Override
     public String getCurrentStatus() {
         return status.toString();
     }
 
+    @Override
     public void updateStatus(String newStatus) {
         if (newStatus == null || newStatus.isBlank()) {
-            throw new IllegalArgumentException("Flight status cannot be blank.");
+            throw new IllegalArgumentException(
+                    "Flight status cannot be blank.");
         }
 
         FlightStatus newFlightStatus;
@@ -259,7 +296,8 @@ public abstract class Flight implements Trackable {
         try {
             newFlightStatus = FlightStatus.valueOf(newStatus.trim().toUpperCase(Locale.ROOT));
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid flight status: " + newStatus);
+            throw new IllegalArgumentException(
+                    "Invalid flight status: " + newStatus);
         }
 
         switch (newFlightStatus) {
@@ -268,7 +306,8 @@ public abstract class Flight implements Trackable {
             case DEPARTED -> markDeparted();
             case ARRIVED -> markArrived();
 
-            default -> throw new IllegalStateException("Flight status cannot be manually changed to " + newFlightStatus);
+            default -> throw new IllegalStateException(
+                    "Flight status cannot be manually changed to " + newFlightStatus);
         }
     }
 
@@ -282,7 +321,7 @@ public abstract class Flight implements Trackable {
                 + ", Delay: " + delayMinutes + " minutes";
     }
 
-    // --- Abstracts methods --- //
+    // --- Abstract Methods --- //
     public abstract void validateTravelDocuments(Passenger passenger);
 
     public abstract double calculateTravelFee(double baseFare);
@@ -291,7 +330,7 @@ public abstract class Flight implements Trackable {
 
     public abstract boolean isInternational();
 
-    // --- Getters & Setters --- //
+    // --- Getters --- //
     public String getFlightNumber() {
         return flightNumber;
     }
@@ -324,6 +363,11 @@ public abstract class Flight implements Trackable {
         return assignedGate;
     }
 
+    public int getDelayMinutes() {
+        return delayMinutes;
+    }
+
+    // --- Gate Assignment --- //
     void attachGate(Gate gate) {
         Objects.requireNonNull(gate, "Gate cannot be null.");
 
@@ -344,10 +388,6 @@ public abstract class Flight implements Trackable {
         assignedGate = null;
     }
 
-    public int getDelayMinutes() {
-        return delayMinutes;
-    }
-
     // --- Object Method Overrides --- //
     @Override
     public boolean equals(Object other) {
@@ -359,7 +399,8 @@ public abstract class Flight implements Trackable {
             return false;
         }
 
-        return flightNumber.equals(flight.flightNumber) && departureTime.equals(flight.departureTime);
+        return flightNumber.equals(flight.flightNumber)
+                && departureTime.equals(flight.departureTime);
     }
 
     @Override
