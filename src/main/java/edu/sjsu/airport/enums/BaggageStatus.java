@@ -1,4 +1,4 @@
-package edu.sjsu.airport.model;
+package edu.sjsu.airport.enums;
 
 public enum BaggageStatus {
     CREATED,
@@ -9,5 +9,4 @@ public enum BaggageStatus {
     MISROUTED,
     READY_FOR_CLAIM,
     CLAIMED
-
 }
