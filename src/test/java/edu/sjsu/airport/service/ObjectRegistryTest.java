@@ -4,7 +4,7 @@ import edu.sjsu.airport.config.SystemLimits;
 import edu.sjsu.airport.exception.CapacityExceededException;
 import edu.sjsu.airport.exception.DuplicateEntityException;
 import edu.sjsu.airport.model.Baggage;
-import edu.sjsu.airport.model.BaggageStatus;
+import edu.sjsu.airport.enums.BaggageStatus;
 import edu.sjsu.airport.model.Booking;
 import edu.sjsu.airport.model.DomesticFlight;
 import edu.sjsu.airport.model.Flight;
