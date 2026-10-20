@@ -36,7 +36,7 @@ public final class GateBaggageConsole {
         while (running) {
             displayMenu();
             int choice = input.readInt(
-                    "Select an option: ", 0, 13);
+                    "Select an option: ", 0, 14);
 
             switch (choice) {
                 case 1 -> registerGate();
@@ -52,6 +52,7 @@ public final class GateBaggageConsole {
                 case 11 -> transferBaggage();
                 case 12 -> markBaggageMisrouted();
                 case 13 -> displayTrackingSummaries();
+                case 14 -> removeBaggageFromPassenger();
                 case 0 -> running = false;
                 default -> throw new IllegalStateException(
                         "Unexpected menu choice: " + choice);
@@ -272,6 +273,33 @@ public final class GateBaggageConsole {
         }
     }
 
+    private void removeBaggageFromPassenger() {
+        output.println();
+        output.println("Remove Baggage From Passenger");
+
+        try {
+            Passenger passenger = requirePassenger();
+            Baggage baggage = requireBaggage();
+
+            if (!baggage.getOwner().equals(passenger)) {
+                throw new IllegalArgumentException(
+                        "Baggage does not belong to this passenger.");
+            }
+
+            passenger.removeBaggage(baggage);
+
+            output.println(
+                    baggage.getTagNumber()
+                            + " was removed from passenger "
+                            + passenger.getPassengerId()
+                            + ".");
+        } catch (RuntimeException exception) {
+            printFailure(
+                    "remove baggage from passenger",
+                    exception);
+        }
+    }
+
     private void displayTrackingSummaries() {
         output.println();
         output.println("Trackable Operations");
@@ -376,6 +404,7 @@ public final class GateBaggageConsole {
         output.println("11. Transfer baggage");
         output.println("12. Mark baggage misrouted");
         output.println("13. View all tracking summaries");
+        output.println("14. Remove baggage from passenger");
         output.println("0. Return to main menu");
     }
 }
