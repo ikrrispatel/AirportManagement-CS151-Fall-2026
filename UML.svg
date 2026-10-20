@@ -1,15 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1250" viewBox="0 0 1800 1250">
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="2050" viewBox="0 0 1800 2050">
 <defs>
 <style>
-.title{font:700 30px Arial;fill:#172033}.sub{font:14px Arial;fill:#526071}.name{font:700 18px Arial;fill:#fff}.stereo{font:italic 13px Arial;fill:#dbeafe}.body{font:14px monospace;fill:#172033}.label{font:13px Arial;fill:#334155}.box{fill:#f8fafc;stroke:#334155;stroke-width:2}.head{fill:#2563eb}.abstract{fill:#6d28d9}.interface{fill:#047857}.enum{fill:#b45309}.line{stroke:#475569;stroke-width:2;fill:none}.dash{stroke:#475569;stroke-width:2;fill:none;stroke-dasharray:8 6}
+.title{font:700 30px Arial;fill:#172033}.sub{font:14px Arial;fill:#526071}.name{font:700 18px Arial;fill:#fff}.stereo{font:italic 13px Arial;fill:#dbeafe}.body{font:14px monospace;fill:#172033}.label{font:13px Arial;fill:#334155}.box{fill:#f8fafc;stroke:#334155;stroke-width:2}.head{fill:#2563eb}.abstract{fill:#6d28d9}.interface{fill:#047857}.enum{fill:#b45309}.uihead{fill:#0369a1}.confighead{fill:#475569}.exceptionhead{fill:#be123c}.smallname{font:700 15px Arial;fill:#fff}.smallbody{font:12px monospace;fill:#172033}.section{font:700 22px Arial;fill:#172033}.line{stroke:#475569;stroke-width:2;fill:none}.dash{stroke:#475569;stroke-width:2;fill:none;stroke-dasharray:8 6}
 </style>
 <marker id="arrow" markerWidth="12" markerHeight="12" refX="11" refY="6" orient="auto"><path d="M0,0 L12,6 L0,12 z" fill="#475569"/></marker>
 <marker id="triangle" markerWidth="14" markerHeight="14" refX="13" refY="7" orient="auto"><path d="M1,1 L13,7 L1,13 z" fill="white" stroke="#475569" stroke-width="1.5"/></marker>
 <marker id="diamond" markerWidth="14" markerHeight="14" refX="2" refY="7" orient="auto"><path d="M1,7 L7,1 L13,7 L7,13 z" fill="#475569"/></marker>
 </defs>
-<rect width="1800" height="1250" fill="#eef2f7"/>
+<rect width="1800" height="2050" fill="#eef2f7"/>
 <text x="900" y="45" text-anchor="middle" class="title">Airport Operations and Disruption Recovery System</text>
-<text x="900" y="70" text-anchor="middle" class="sub">UML Class Diagram — core domain and service architecture</text>
+<text x="900" y="70" text-anchor="middle" class="sub">UML Class Diagram — complete production architecture</text>
 
 <!-- management system -->
 <g transform="translate(520 95)"><rect class="box" width="760" height="180" rx="8"/><rect class="head" width="760" height="42" rx="8"/><text x="380" y="27" text-anchor="middle" class="name">AirportManagementSystem</text><line x1="0" y1="42" x2="760" y2="42" class="line"/>
@@ -64,5 +64,171 @@
 <path d="M905 365 L1325 365 L1325 255 L1370 255" class="dash" marker-end="url(#triangle)"/><text x="1190" y="350" class="label">implements</text>
 <path d="M1445 735 L1445 650 L1710 650 L1710 255" class="dash" marker-end="url(#triangle)"/><text x="1460" y="644" class="label">implements</text>
 <path d="M560 650 L560 1080" class="dash" marker-end="url(#arrow)"/><path d="M1500 605 L1500 1045 L710 1045 L710 1080" class="dash" marker-end="url(#arrow)"/><path d="M1445 1025 L1445 1080" class="dash" marker-end="url(#arrow)"/>
-<text x="1530" y="1215" class="sub">Legend: solid diamond = ownership · hollow triangle = inheritance/implementation · arrow = association</text>
+<!-- user-interface layer -->
+<text x="40" y="1285" class="section">User Interface Package</text>
+<text x="40" y="1310" class="sub">All console classes depend on AirportManagementSystem, domain models, and one shared ConsoleInput.</text>
+
+<g transform="translate(35 1330)">
+<rect class="box" width="330" height="205" rx="8"/>
+<rect class="uihead" width="330" height="42" rx="8"/>
+<text x="165" y="27" text-anchor="middle" class="smallname">AirportConsoleApplication</text>
+<line x1="0" y1="42" x2="330" y2="42" class="line"/>
+<text x="12" y="65" class="smallbody">- system: AirportManagementSystem</text>
+<text x="12" y="84" class="smallbody">- input: ConsoleInput</text>
+<text x="12" y="103" class="smallbody">- output: PrintStream</text>
+<line x1="0" y1="115" x2="330" y2="115" class="line"/>
+<text x="12" y="138" class="smallbody">+ main(String[]): void</text>
+<text x="12" y="157" class="smallbody">+ run(): void</text>
+<text x="12" y="176" class="smallbody">- handleMainChoice(int): boolean</text>
+<text x="12" y="195" class="smallbody">- relocateAirport(): void</text>
+</g>
+
+<g transform="translate(385 1330)">
+<rect class="box" width="330" height="205" rx="8"/>
+<rect class="uihead" width="330" height="42" rx="8"/>
+<text x="165" y="27" text-anchor="middle" class="smallname">BookingConsole</text>
+<line x1="0" y1="42" x2="330" y2="42" class="line"/>
+<text x="12" y="65" class="smallbody">- system: AirportManagementSystem</text>
+<text x="12" y="84" class="smallbody">- input: ConsoleInput</text>
+<text x="12" y="103" class="smallbody">- output: PrintStream</text>
+<line x1="0" y1="115" x2="330" y2="115" class="line"/>
+<text x="12" y="138" class="smallbody">+ run(): void</text>
+<text x="12" y="157" class="smallbody">- createBooking(): void</text>
+<text x="12" y="176" class="smallbody">- rebookPassenger(): void</text>
+<text x="12" y="195" class="smallbody">- changeSeat(): void</text>
+</g>
+
+<g transform="translate(735 1330)">
+<rect class="box" width="330" height="205" rx="8"/>
+<rect class="uihead" width="330" height="42" rx="8"/>
+<text x="165" y="27" text-anchor="middle" class="smallname">ConsoleInput</text>
+<line x1="0" y1="42" x2="330" y2="42" class="line"/>
+<text x="12" y="65" class="smallbody">+ EXIT_COMMAND: String {static}</text>
+<text x="12" y="84" class="smallbody">- scanner: Scanner</text>
+<text x="12" y="103" class="smallbody">- output: PrintStream</text>
+<line x1="0" y1="115" x2="330" y2="115" class="line"/>
+<text x="12" y="138" class="smallbody">+ readLine(String): String</text>
+<text x="12" y="157" class="smallbody">+ readInt(String,int,int): int</text>
+<text x="12" y="176" class="smallbody">+ readDouble(String,...): double</text>
+<text x="12" y="195" class="smallbody">+ readYesNo(String): boolean</text>
+</g>
+
+<g transform="translate(1085 1330)">
+<rect class="box" width="330" height="205" rx="8"/>
+<rect class="uihead" width="330" height="42" rx="8"/>
+<text x="165" y="27" text-anchor="middle" class="smallname">FlightPassengerConsole</text>
+<line x1="0" y1="42" x2="330" y2="42" class="line"/>
+<text x="12" y="65" class="smallbody">- system: AirportManagementSystem</text>
+<text x="12" y="84" class="smallbody">- input: ConsoleInput</text>
+<text x="12" y="103" class="smallbody">- output: PrintStream</text>
+<line x1="0" y1="115" x2="330" y2="115" class="line"/>
+<text x="12" y="138" class="smallbody">+ run(): void</text>
+<text x="12" y="157" class="smallbody">- registerPassenger(): void</text>
+<text x="12" y="176" class="smallbody">- registerDomesticFlight(): void</text>
+<text x="12" y="195" class="smallbody">- promoteStandbyPassenger(): void</text>
+</g>
+
+<g transform="translate(1435 1330)">
+<rect class="box" width="330" height="205" rx="8"/>
+<rect class="uihead" width="330" height="42" rx="8"/>
+<text x="165" y="27" text-anchor="middle" class="smallname">GateBaggageConsole</text>
+<line x1="0" y1="42" x2="330" y2="42" class="line"/>
+<text x="12" y="65" class="smallbody">- system: AirportManagementSystem</text>
+<text x="12" y="84" class="smallbody">- input: ConsoleInput</text>
+<text x="12" y="103" class="smallbody">- output: PrintStream</text>
+<line x1="0" y1="115" x2="330" y2="115" class="line"/>
+<text x="12" y="138" class="smallbody">+ run(): void</text>
+<text x="12" y="157" class="smallbody">- assignFlightToGate(): void</text>
+<text x="12" y="176" class="smallbody">- transferBaggage(): void</text>
+<text x="12" y="195" class="smallbody">- displayTrackingSummaries(): void</text>
+</g>
+
+<!-- configuration -->
+<g transform="translate(35 1580)">
+<rect class="box" width="390" height="125" rx="8"/>
+<rect class="confighead" width="390" height="42" rx="8"/>
+<text x="195" y="27" text-anchor="middle" class="name">SystemLimits</text>
+<line x1="0" y1="42" x2="390" y2="42" class="line"/>
+<text x="12" y="69" class="smallbody">+ MAXIMUM_INSTANCES: int = 100 {static}</text>
+<line x1="0" y1="83" x2="390" y2="83" class="line"/>
+<text x="12" y="108" class="smallbody">- SystemLimits()</text>
+</g>
+
+<!-- exception package -->
+<text x="470" y="1585" class="section">Exception Package</text>
+
+<g transform="translate(470 1605)">
+<rect class="box" width="410" height="100" rx="8"/>
+<rect class="exceptionhead" width="410" height="38" rx="8"/>
+<text x="205" y="25" text-anchor="middle" class="smallname">CapacityExceededException</text>
+<text x="12" y="61" class="smallbody">extends IllegalStateException</text>
+<text x="12" y="83" class="smallbody">+ CapacityExceededException(String,int)</text>
+</g>
+
+<g transform="translate(920 1605)">
+<rect class="box" width="410" height="100" rx="8"/>
+<rect class="exceptionhead" width="410" height="38" rx="8"/>
+<text x="205" y="25" text-anchor="middle" class="smallname">DuplicateAirportException</text>
+<text x="12" y="61" class="smallbody">extends IllegalArgumentException</text>
+<text x="12" y="83" class="smallbody">+ DuplicateAirportException(String)</text>
+</g>
+
+<g transform="translate(1370 1605)">
+<rect class="box" width="395" height="100" rx="8"/>
+<rect class="exceptionhead" width="395" height="38" rx="8"/>
+<text x="197" y="25" text-anchor="middle" class="smallname">DuplicateEntityException</text>
+<text x="12" y="61" class="smallbody">extends IllegalArgumentException</text>
+<text x="12" y="83" class="smallbody">+ DuplicateEntityException(String,String)</text>
+</g>
+
+<g transform="translate(35 1740)">
+<rect class="box" width="390" height="100" rx="8"/>
+<rect class="exceptionhead" width="390" height="38" rx="8"/>
+<text x="195" y="25" text-anchor="middle" class="smallname">ExitRequestedException</text>
+<text x="12" y="61" class="smallbody">extends RuntimeException</text>
+<text x="12" y="83" class="smallbody">+ ExitRequestedException()</text>
+</g>
+
+<g transform="translate(470 1740)">
+<rect class="box" width="410" height="100" rx="8"/>
+<rect class="exceptionhead" width="410" height="38" rx="8"/>
+<text x="205" y="25" text-anchor="middle" class="smallname">FlightFullException</text>
+<text x="12" y="61" class="smallbody">extends RuntimeException</text>
+<text x="12" y="83" class="smallbody">+ FlightFullException(String)</text>
+</g>
+
+<g transform="translate(920 1740)">
+<rect class="box" width="410" height="100" rx="8"/>
+<rect class="exceptionhead" width="410" height="38" rx="8"/>
+<text x="205" y="25" text-anchor="middle" class="smallname">GateUnavailableException</text>
+<text x="12" y="61" class="smallbody">extends RuntimeException</text>
+<text x="12" y="83" class="smallbody">+ GateUnavailableException(String)</text>
+</g>
+
+<g transform="translate(1370 1740)">
+<rect class="box" width="395" height="100" rx="8"/>
+<rect class="exceptionhead" width="395" height="38" rx="8"/>
+<text x="197" y="25" text-anchor="middle" class="smallname">InvalidBookingStateException</text>
+<text x="12" y="61" class="smallbody">extends IllegalStateException</text>
+<text x="12" y="83" class="smallbody">+ InvalidBookingStateException(String)</text>
+</g>
+
+<g transform="translate(470 1875)">
+<rect class="box" width="410" height="100" rx="8"/>
+<rect class="exceptionhead" width="410" height="38" rx="8"/>
+<text x="205" y="25" text-anchor="middle" class="smallname">InvalidTravelDocumentException</text>
+<text x="12" y="61" class="smallbody">extends RuntimeException</text>
+<text x="12" y="83" class="smallbody">+ InvalidTravelDocumentException(String)</text>
+</g>
+
+<g transform="translate(920 1875)">
+<rect class="box" width="410" height="100" rx="8"/>
+<rect class="exceptionhead" width="410" height="38" rx="8"/>
+<text x="205" y="25" text-anchor="middle" class="smallname">PassengerNotCheckedInException</text>
+<text x="12" y="61" class="smallbody">extends IllegalStateException</text>
+<text x="12" y="83" class="smallbody">+ PassengerNotCheckedInException(String)</text>
+</g>
+
+<!-- UI dependencies -->
+<text x="900" y="2025" text-anchor="middle" class="sub">Legend: solid diamond = ownership · hollow triangle = inheritance · dashed hollow triangle = interface implementation · arrow = association</text>
 </svg>
