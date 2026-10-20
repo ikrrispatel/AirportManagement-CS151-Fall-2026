@@ -110,6 +110,31 @@ class GateBaggageConsoleTest {
         assertTrue(output.contains("Baggage TAG1102"));
     }
 
+    @Test
+    void removesBaggageFromPassenger() {
+        AirportManagementSystem system =
+                createSystem();
+        Passenger passenger =
+                system.findPassenger("P1101").orElseThrow();
+        Baggage baggage = new Baggage(
+                "TAG1103",
+                passenger,
+                BaggageStatus.CREATED,
+                "Counter",
+                15.0);
+
+        system.addBaggage(baggage);
+        passenger.addBaggage(baggage);
+
+        String output = runConsole(
+                system,
+                "14\nP1101\nTAG1103\n0\n");
+
+        assertTrue(passenger.getBaggageItems().isEmpty());
+        assertTrue(system.findBaggage("TAG1103").isPresent());
+        assertTrue(output.contains("TAG1103"));
+    }
+
     private AirportManagementSystem createSystem() {
         AirportManagementSystem system =
                 new AirportManagementSystem();

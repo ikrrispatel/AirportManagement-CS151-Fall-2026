@@ -1,5 +1,7 @@
 package edu.sjsu.airport.ui;
 
+import edu.sjsu.airport.enums.BookingStatus;
+import edu.sjsu.airport.model.Booking;
 import edu.sjsu.airport.model.DomesticFlight;
 import edu.sjsu.airport.model.Flight;
 import edu.sjsu.airport.model.InternationalFlight;
@@ -32,7 +34,7 @@ public final class FlightPassengerConsole {
         while (running) {
             displayMenu();
             int choice = input.readInt(
-                    "Select an option: ", 0, 8);
+                    "Select an option: ", 0, 13);
 
             switch (choice) {
                 case 1 -> registerPassenger();
@@ -43,6 +45,11 @@ public final class FlightPassengerConsole {
                 case 6 -> delayFlight();
                 case 7 -> updateFlightStatus();
                 case 8 -> cancelFlight();
+                case 9 -> promoteStandbyPassenger();
+                case 10 -> determineBoardingGroup();
+                case 11 -> addCustomsRequirement();
+                case 12 -> displayInternationalCheckInDeadline();
+                case 13 -> checkPassengerConnectionRisk();
                 case 0 -> running = false;
                 default -> throw new IllegalStateException(
                         "Unexpected menu choice: " + choice);
@@ -223,6 +230,167 @@ public final class FlightPassengerConsole {
         }
     }
 
+    private void promoteStandbyPassenger() {
+        output.println();
+        output.println("Promote Standby Passenger");
+
+        try {
+            Flight flight = requireFlight();
+            Passenger passenger = flight.promoteStandbyPassenger();
+
+            if (passenger == null) {
+                output.println(
+                        "No standby passenger can be promoted.");
+                return;
+            }
+
+            Booking booking = system.getBookings().stream()
+                    .filter(candidate ->
+                            candidate.getFlight().equals(flight)
+                                    && candidate.getPassenger()
+                                    .equals(passenger)
+                                    && candidate.getStatus()
+                                    == BookingStatus.STANDBY)
+                    .findFirst()
+                    .orElse(null);
+
+            if (booking == null) {
+                flight.removePassenger(passenger);
+                flight.addToStandby(passenger);
+                throw new IllegalStateException(
+                        "No standby booking was found for "
+                                + passenger.getPassengerId() + ".");
+            }
+
+            try {
+                booking.confirmBooking();
+            } catch (RuntimeException exception) {
+                flight.removePassenger(passenger);
+                flight.addToStandby(passenger);
+                throw exception;
+            }
+
+            output.println(
+                    passenger.getPassengerId()
+                            + " was promoted and booking "
+                            + booking.getConfirmationNumber()
+                            + " was confirmed.");
+        } catch (RuntimeException exception) {
+            output.println(
+                    "Unable to promote standby passenger: "
+                            + exception.getMessage());
+        }
+    }
+
+    private void determineBoardingGroup() {
+        output.println();
+        output.println("Determine Domestic Boarding Group");
+
+        try {
+            Flight flight = requireFlight();
+
+            if (!(flight instanceof DomesticFlight domesticFlight)) {
+                throw new IllegalArgumentException(
+                        "Boarding groups are available only "
+                                + "for domestic flights.");
+            }
+
+            int seatRow = input.readInt(
+                    "Seat row: ", 1, 1000);
+            int group =
+                    domesticFlight.determineBoardingGroup(seatRow);
+
+            output.println(
+                    "Boarding group for row "
+                            + seatRow
+                            + ": "
+                            + group);
+        } catch (RuntimeException exception) {
+            output.println(
+                    "Unable to determine boarding group: "
+                            + exception.getMessage());
+        }
+    }
+
+    private void addCustomsRequirement() {
+        output.println();
+        output.println("Add Customs Requirement");
+
+        try {
+            Flight flight = requireFlight();
+
+            if (!(flight instanceof InternationalFlight internationalFlight)) {
+                throw new IllegalArgumentException(
+                        "Customs requirements apply only "
+                                + "to international flights.");
+            }
+
+            String requirement = input.readRequiredLine(
+                    "Customs requirement: ");
+            internationalFlight.addCustomsRequirement(requirement);
+
+            output.println(
+                    "Customs requirement added to "
+                            + flight.getFlightNumber()
+                            + ".");
+        } catch (RuntimeException exception) {
+            output.println(
+                    "Unable to add customs requirement: "
+                            + exception.getMessage());
+        }
+    }
+
+    private void displayInternationalCheckInDeadline() {
+        output.println();
+        output.println("International Check-In Deadline");
+
+        try {
+            Flight flight = requireFlight();
+
+            if (!(flight instanceof InternationalFlight internationalFlight)) {
+                throw new IllegalArgumentException(
+                        "International check-in deadlines apply only "
+                                + "to international flights.");
+            }
+
+            output.println(
+                    flight.getFlightNumber()
+                            + " check-in deadline: "
+                            + internationalFlight
+                            .determineInternationalCheckInDeadline());
+        } catch (RuntimeException exception) {
+            output.println(
+                    "Unable to determine check-in deadline: "
+                            + exception.getMessage());
+        }
+    }
+
+    private void checkPassengerConnectionRisk() {
+        output.println();
+        output.println("Check Passenger Connection Risk");
+
+        String passengerId = input.readRequiredLine(
+                "Passenger ID: ");
+
+        try {
+            Passenger passenger = system.findPassenger(passengerId)
+                    .orElseThrow(() ->
+                            new IllegalArgumentException(
+                                    "No passenger found with ID "
+                                            + passengerId + "."));
+
+            output.println(
+                    passenger.getPassengerId()
+                            + (passenger.checkConnectionRisk()
+                            ? " has a connection risk."
+                            : " does not have a connection risk."));
+        } catch (RuntimeException exception) {
+            output.println(
+                    "Unable to check connection risk: "
+                            + exception.getMessage());
+        }
+    }
+
     private Flight requireFlight() {
         String flightNumber = input.readRequiredLine(
                 "Flight number: ");
@@ -259,6 +427,11 @@ public final class FlightPassengerConsole {
         output.println("6. Delay a flight");
         output.println("7. Update a flight status");
         output.println("8. Cancel a flight");
+        output.println("9. Promote a standby passenger");
+        output.println("10. Determine domestic boarding group");
+        output.println("11. Add international customs requirement");
+        output.println("12. View international check-in deadline");
+        output.println("13. Check passenger connection risk");
         output.println("0. Return to main menu");
     }
 }
